@@ -103,6 +103,7 @@ public class ProvaCrawler {
                 WindowStatus statusAfter = new WindowStatus(afterList);
                 if(!statuses.contains(statusAfter)){
                     statusAfter.getTransitions().addAll(status.getTransitions());
+                    statusAfter.getTransitions().add(new Transition(UIActions.CLICK,node));
                     statuses.add(statusAfter);
                     crawl(statusAfter);
                 }

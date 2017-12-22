@@ -79,12 +79,36 @@ public class TestCaseGenerator {
         template = template.replaceAll("conditionBounds", boundsCond);
 
 
+        // TODO: TRANSIZIONI PER ARRIVARE ALLO STATUS
+
+        if(transitions.isEmpty()){
+
+            template = template.replaceAll("transitions_to_node", " ");
+        }
+        else{
+            StringBuilder builder = new StringBuilder();
+            for(Transition t:transitions){
+                switch (t.getAction()){
+
+                    case CLICK: builder.append("mDevice.click(" + node.getBounds().centerX() + ", " + node.getBounds().centerY() + "); \n");
+                                builder.append("mDevice.waitForWindowUpdate(" + appPackage + ", " + 5000 + ");");
 
 
-
+                }
+            }
+            template = template.replaceAll("transitions_to_node", builder.toString());
+        }
 
         printTestCase(template, fileName);
     }
+
+
+    /*
+    *
+    *
+    *
+    * */
+
 
     private static String getTemplate() {
         //Find the directory for the SD Card using the API
