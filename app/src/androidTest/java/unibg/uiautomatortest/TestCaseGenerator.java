@@ -15,6 +15,9 @@ import java.util.List;
 public class TestCaseGenerator {
 
 
+    public static String uiautomatorName = "UIAutomatorTest";
+
+
     public static void generateTestCase(String appPackage, Node node, String fileName, List<Transition> transitions) throws IOException {
 
 
@@ -99,7 +102,7 @@ public class TestCaseGenerator {
             template = template.replaceAll("transitions_to_node", builder.toString());
         }
 
-        printTestCase(template, fileName);
+        printTestCase(appPackage, template, fileName);
     }
 
 
@@ -116,7 +119,7 @@ public class TestCaseGenerator {
         File dir = Environment.getExternalStorageDirectory();
 
         //Get the text file
-        File file = new File(dir + "/testing/", "template.txt");
+        File file = new File(dir + "/" + uiautomatorName  + "/", "template.txt");
 
         //Read text from file
         StringBuilder text = new StringBuilder();
@@ -137,10 +140,13 @@ public class TestCaseGenerator {
         return text.toString();
     }
 
-    private static void printTestCase(String testCase, String fileName) throws IOException {
+    private static void printTestCase(String appPackage, String testCase, String fileName) throws IOException {
 
-        File file = new File(Environment.getExternalStorageDirectory() + "/testing/", fileName+ ".java");
-        FileOutputStream fos = new FileOutputStream(file);
+        File file = new File(Environment.getExternalStorageDirectory()  + "/" + uiautomatorName  + "/" + appPackage + "/");
+        file.mkdirs();
+
+        File output = new File(file, fileName+ ".java");
+        FileOutputStream fos = new FileOutputStream(output);
         byte[] data = testCase.getBytes();
         fos.write(data);
         fos.flush();

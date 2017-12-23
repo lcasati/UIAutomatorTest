@@ -43,7 +43,10 @@ public class ProvaCrawler {
     @Before
     public void startMainActivityFromHomeScreen() {
 
+
+        // Checked widgets
         classes.add("android.widget.TextView");
+
         statuses = new ArrayList<>();
 
         // Initialize UiDevice instance
@@ -82,6 +85,8 @@ public class ProvaCrawler {
         List<UiObject2> lista =  mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
         WindowStatus status1 = new WindowStatus(lista);
         statuses.add(status1);
+
+        // TODO: CONTROLLA ECCEZIONI
         crawl(status1);
 
     }
@@ -109,6 +114,16 @@ public class ProvaCrawler {
                 }
 
             }
+
+           if(node.isScrollable()){
+
+           }
+
+
+           if(node.isLong_clickable()){
+
+           }
+
         }
 
         closeAndOpenApp();
