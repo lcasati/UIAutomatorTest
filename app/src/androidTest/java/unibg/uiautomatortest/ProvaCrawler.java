@@ -46,6 +46,8 @@ public class ProvaCrawler {
 
         // Checked widgets
         classes.add("android.widget.TextView");
+        classes.add("android.widget.ImageView");
+        classes.add("android.widget.ImageButton");
 
         statuses = new ArrayList<>();
 

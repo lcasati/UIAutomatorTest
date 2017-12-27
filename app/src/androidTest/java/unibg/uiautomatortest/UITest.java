@@ -188,7 +188,13 @@ public class UITest {
 
         Log.d("contrast ratio bottone", Double.toString(ImageUtilities.contrastRatio(buttonimg)));
 
-        File dir2 = new File(Environment.getExternalStorageDirectory() + "/testing/viewsimg/");
+
+
+        Log.d("contrast ratio bottone NUOVO METODO", Double.toString(ImageUtilities.contrastRatio(file.getAbsolutePath(),buttoobj.getVisibleBounds())));
+
+
+
+       /* File dir2 = new File(Environment.getExternalStorageDirectory() + "/testing/viewsimg/");
         dir2.mkdirs();
         File file2 = new File(dir2, "viewimage2.png");
         FileOutputStream out = null;
@@ -208,7 +214,7 @@ public class UITest {
             }
         }
 
-
+        */
 
 
     }
