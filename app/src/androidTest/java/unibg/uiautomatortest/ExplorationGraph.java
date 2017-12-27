@@ -7,11 +7,11 @@ import java.util.List;
 public class ExplorationGraph {
 
     private List<WindowStatus> statuses;
-    private List<Transition> transitions;
+    private List<Edge> edges;
 
     public ExplorationGraph(){
         statuses=new ArrayList<>();
-        transitions=new ArrayList<>();
+        edges=new ArrayList<>();
     }
 
 

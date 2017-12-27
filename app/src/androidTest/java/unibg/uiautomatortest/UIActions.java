@@ -3,7 +3,7 @@ package unibg.uiautomatortest;
 
 public enum  UIActions {
 
-    CLICK;
+    CLICK, LONG_CLICK, SCROLL;
 
 
 }

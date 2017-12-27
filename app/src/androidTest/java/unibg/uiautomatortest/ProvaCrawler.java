@@ -104,6 +104,7 @@ public class ProvaCrawler {
 
 
             if(node.isClickable()){
+                status.getTransitions().add(new Transition(UIActions.CLICK, node));
                 mDevice.click(node.getBounds().centerX(),node.getBounds().centerY());
                 mDevice.waitForWindowUpdate(CACIUPPO_PACKAGE,LAUNCH_TIMEOUT);
                 List<UiObject2> afterList =  mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
@@ -118,12 +119,12 @@ public class ProvaCrawler {
             }
 
            if(node.isScrollable()){
-
+               status.getTransitions().add(new Transition(UIActions.LONG_CLICK, node));
            }
 
 
            if(node.isLong_clickable()){
-
+               status.getTransitions().add(new Transition(UIActions.SCROLL, node));
            }
 
         }
