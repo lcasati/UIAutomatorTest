@@ -14,6 +14,9 @@ public class ExplorationGraph {
         edges=new ArrayList<>();
     }
 
+    public void addStatus(WindowStatus status){
+        statuses.add(status);
+    }
 
 
 }

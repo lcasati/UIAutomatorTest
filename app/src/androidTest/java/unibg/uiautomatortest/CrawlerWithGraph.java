@@ -2,17 +2,12 @@ package unibg.uiautomatortest;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.RemoteException;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
-import android.support.test.uiautomator.Direction;
 import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObject2;
-import android.support.test.uiautomator.UiObjectNotFoundException;
-import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
 import android.util.Log;
 
@@ -29,16 +24,14 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
-public class ProvaCrawler {
+public class CrawlerWithGraph {
 
     private static final String CACIUPPO_PACKAGE
             = "unibg.caciuppo";
     private static final int LAUNCH_TIMEOUT = 5000;
-    private static final String STRING_TO_BE_TYPED = "UiAutomator";
     private UiDevice mDevice;
-    private List<WindowStatus> statuses;
     private List<String> classes = new ArrayList<>();
-    int i=0;
+    int i = 0;
 
     @Before
     public void startMainActivityFromHomeScreen() {
@@ -49,7 +42,6 @@ public class ProvaCrawler {
         classes.add("android.widget.ImageView");
         classes.add("android.widget.ImageButton");
 
-        statuses = new ArrayList<>();
 
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -80,61 +72,118 @@ public class ProvaCrawler {
     }
 
 
-
     @Test
     public void test() throws IOException {
-        ExplorationGraph graph = new ExplorationGraph();
-        List<UiObject2> lista =  mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
-        WindowStatus status1 = new WindowStatus(lista);
-        graph.addStatus(status1);
-        statuses.add(status1);
+        populateEditText();
+        List<UiObject2> lista = mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
+        WindowStatus status0 = new WindowStatus(lista);
+
+        ListGraph.addVisitedStatus(status0);
+        ListGraph.status0=status0;
 
         // TODO: CONTROLLA ECCEZIONI
-        crawl(status1);
+        crawl(status0);
 
     }
 
     public void crawl(WindowStatus status) throws IOException {
 
-        for(Node node:status.getNodes()){
+        populateEditText();
 
-            if(classes.contains(node.getClassName())){
-                TestCaseGenerator.generateTestCase(CACIUPPO_PACKAGE,node, "Test" + i, status.getTransitions() );
+        for (Node node : status.getNodes()) {
+
+            if (classes.contains(node.getClassName())) {
+                TestCaseGenerator.generateTestCase(CACIUPPO_PACKAGE, node, "Test" + i, status.getNumber());
                 i++;
             }
 
 
-            if(node.isClickable()){
+            if (node.isClickable()) {
                 status.getTransitions().add(new Transition(UIActions.CLICK, node));
-                mDevice.click(node.getBounds().centerX(),node.getBounds().centerY());
-                mDevice.waitForWindowUpdate(CACIUPPO_PACKAGE,LAUNCH_TIMEOUT);
-                List<UiObject2> afterList =  mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
-                WindowStatus statusAfter = new WindowStatus(afterList);
-                if(!statuses.contains(statusAfter)){
-                    statusAfter.getTransitions().addAll(status.getTransitions());
-                    statusAfter.getTransitions().add(new Transition(UIActions.CLICK,node));
-                    statuses.add(statusAfter);
-                    crawl(statusAfter);
-                }
 
             }
 
-           if(node.isScrollable()){
-               status.getTransitions().add(new Transition(UIActions.LONG_CLICK, node));
-           }
+           /* if (node.isScrollable()) {
+                status.getTransitions().add(new Transition(UIActions.LONG_CLICK, node));
+            }
 
 
-           if(node.isLong_clickable()){
-               status.getTransitions().add(new Transition(UIActions.SCROLL, node));
-           }
+            if (node.isLong_clickable()) {
+                status.getTransitions().add(new Transition(UIActions.SCROLL, node));
+            }*/
 
         }
 
-        closeAndOpenApp();
+        for (Transition transition : status.getTransitions()) {
+            Node node = transition.getNode();
+            switch (transition.getAction()) {
+
+                case CLICK:
+                    mDevice.click(node.getBounds().centerX(), node.getBounds().centerY());
+                    mDevice.waitForWindowUpdate(CACIUPPO_PACKAGE, LAUNCH_TIMEOUT);
+                    populateEditText();
+                    List<UiObject2> afterList = mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
+                    WindowStatus statusAfter = new WindowStatus(afterList);
+                    if (!ListGraph.getVisitedStatuses().contains(statusAfter)) {
+                        Log.d("TRANSIZIONE", transition.toString());
+                        ListGraph.addVisitedStatus(statusAfter);
+                        List<Transition> transitionList = new ArrayList<>();
+
+                        if(status.getNumber()!=0)
+                            transitionList.addAll(ListGraph.getPath(status.getNumber()));
+
+                        transitionList.add(transition);
+                        crawl(statusAfter);
+                    }
+                    else{
+                        Log.d("STATO UGUALE","STATO UGUALE");
+                    }
+                    break;
+
+            }
+            comeBackToStatus(status);
+        }
+
+        //closeAndOpenApp();
 
     }
 
-    private void closeAndOpenApp(){
+
+    private void populateEditText(){
+        List<UiObject2> editTextViews = mDevice.findObjects(By.clazz("android.widget.EditText"));
+
+        if(editTextViews.size()!=0){
+            for(UiObject2 obj:editTextViews){
+                obj.setText("test");
+            }
+        }
+    }
+
+    private void comeBackToStatus(WindowStatus status){
+
+        closeAndOpenApp();
+        populateEditText();
+        List<Transition> transitions = ListGraph.getPath(status.getNumber());
+
+        if(transitions!=null){
+            for(Transition t:transitions){
+                Node node = t.getNode();
+                switch (t.getAction()) {
+
+                    case CLICK:
+                        mDevice.click(node.getBounds().centerX(), node.getBounds().centerY());
+                        mDevice.waitForWindowUpdate(CACIUPPO_PACKAGE, LAUNCH_TIMEOUT);
+                        populateEditText();
+                        break;
+                }
+            }
+        }
+
+
+
+    }
+
+    private void closeAndOpenApp() {
 
         // Start from the home screen
         mDevice.pressHome();
@@ -159,7 +208,6 @@ public class ProvaCrawler {
 
 
     }
-
 
 
 }

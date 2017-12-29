@@ -106,6 +106,12 @@ public class TestCaseGenerator {
     }
 
 
+    public static void generateTestCase(String appPackage, Node node, String fileName,int statusNumber){
+
+
+        Log.d("CASO DI TEST", appPackage + "\n" + "STATUS NUMERO" + Integer.toString(statusNumber) + "\n" + node.toString());
+    }
+
     /*
     *
     *

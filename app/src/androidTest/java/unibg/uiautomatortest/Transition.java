@@ -18,4 +18,12 @@ public class Transition {
     public UIActions getAction() {
         return action;
     }
+
+    @Override
+    public String toString() {
+        return "Transition{" +
+                "action=" + action +
+                ", node=" + node +
+                '}';
+    }
 }

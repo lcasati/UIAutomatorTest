@@ -10,6 +10,7 @@ public class WindowStatus {
 
     private List<Node> nodes;
     private List<Transition> transitions;
+    private int number;
 
     public WindowStatus(List<UiObject2> list){
         nodes=new ArrayList<>();
@@ -19,12 +20,21 @@ public class WindowStatus {
         transitions= new ArrayList<>();
     }
 
+
+    public void setNumber(int number){
+        this.number=number;
+    }
+
     public List<Transition> getTransitions() {
         return transitions;
     }
 
     public List<Node> getNodes() {
         return nodes;
+    }
+
+    public int getNumber() {
+        return number;
     }
 
     @Override
