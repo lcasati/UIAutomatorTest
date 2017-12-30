@@ -2,6 +2,7 @@ package unibg.uiautomatortest;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
@@ -15,9 +16,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -32,15 +38,18 @@ public class CrawlerWithGraph {
     private UiDevice mDevice;
     private List<String> classes = new ArrayList<>();
     int i = 0;
+    StringBuilder stringBuilder = new StringBuilder();
 
     @Before
-    public void startMainActivityFromHomeScreen() {
+    public void startMainActivityFromHomeScreen() throws FileNotFoundException {
 
 
         // Checked widgets
         classes.add("android.widget.TextView");
         classes.add("android.widget.ImageView");
         classes.add("android.widget.ImageButton");
+        classes.add("android.widget.Button");
+        classes.add("android.widget.CheckedTextView");
 
 
         // Initialize UiDevice instance
@@ -84,24 +93,45 @@ public class CrawlerWithGraph {
         // TODO: CONTROLLA ECCEZIONI
         crawl(status0);
 
+
+        stringBuilder.append("\n\n");
+       for(int i:ListGraph.getPaths().keySet()){
+           stringBuilder.append("CAMMINO PER STATUS " + i + "\n");
+           for(Transition t:ListGraph.getPath(i)){
+               stringBuilder.append(t.toString() + "\n");
+           }
+       }
+
+        File dir = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/logs/");
+        dir.mkdirs();
+        File file = new File(dir, "log.txt");
+        FileOutputStream fos = new FileOutputStream(file);
+        byte[] data = stringBuilder.toString().getBytes();
+        fos.write(data);
+        fos.flush();
+        fos.close();
+
     }
 
     public void crawl(WindowStatus status) throws IOException {
 
+        stringBuilder.append("CRAWL WINDOW " + Integer.toString(status.getNumber()) + "\n");
         populateEditText();
 
         for (Node node : status.getNodes()) {
 
             if (classes.contains(node.getClassName())) {
                 TestCaseGenerator.generateTestCase(CACIUPPO_PACKAGE, node, "Test" + i, status.getNumber());
+                stringBuilder.append("TEST DI " + node.toString() + "\n");
                 i++;
             }
 
 
-            if (node.isClickable()) {
+            if (node.isClickable() || node.isCheckable()) {
                 status.getTransitions().add(new Transition(UIActions.CLICK, node));
-
+                stringBuilder.append("AGGIUNTA TRANSIZIONE " + node.toString() + "\n");
             }
+
 
            /* if (node.isScrollable()) {
                 status.getTransitions().add(new Transition(UIActions.LONG_CLICK, node));
@@ -116,38 +146,61 @@ public class CrawlerWithGraph {
 
         for (Transition transition : status.getTransitions()) {
             Node node = transition.getNode();
+            stringBuilder.append("TRANSIZIONE status: " + status.getNumber() + " " + transition.toString());
             switch (transition.getAction()) {
 
                 case CLICK:
+                    stringBuilder.append("CLICK " + node.toString());
                     mDevice.click(node.getBounds().centerX(), node.getBounds().centerY());
                     mDevice.waitForWindowUpdate(CACIUPPO_PACKAGE, LAUNCH_TIMEOUT);
                     populateEditText();
                     List<UiObject2> afterList = mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
                     WindowStatus statusAfter = new WindowStatus(afterList);
                     if (!ListGraph.getVisitedStatuses().contains(statusAfter)) {
-                        Log.d("TRANSIZIONE", transition.toString());
+
                         ListGraph.addVisitedStatus(statusAfter);
+                        stringBuilder.append("NUOVO STATUS NUMERO " + statusAfter.getNumber() );
+                        takeScreenshot(statusAfter);
                         List<Transition> transitionList = new ArrayList<>();
 
                         if(status.getNumber()!=0)
                             transitionList.addAll(ListGraph.getPath(status.getNumber()));
 
                         transitionList.add(transition);
+                        ListGraph.addPath(statusAfter.getNumber(), transitionList);
                         crawl(statusAfter);
                     }
                     else{
-                        Log.d("STATO UGUALE","STATO UGUALE");
+                        stringBuilder.append("STATUS GIA' ESAMINATO");
                     }
                     break;
 
             }
-            comeBackToStatus(status);
+            if(!currentStatus().equals(status)){
+
+                comeBackToStatus(status);
+            }
+            else{
+                stringBuilder.append("STATUS CORRENTE CORRETTO");
+            }
+
         }
 
         //closeAndOpenApp();
 
     }
 
+
+    private void takeScreenshot(WindowStatus status){
+        File dir = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshots/");
+        dir.mkdirs();
+        File file = new File(dir, "status" + status.getNumber() + ".png");
+        mDevice.takeScreenshot(file);
+    }
+
+    private WindowStatus currentStatus(){
+        return new WindowStatus(mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE)));
+    }
 
     private void populateEditText(){
         List<UiObject2> editTextViews = mDevice.findObjects(By.clazz("android.widget.EditText"));
@@ -161,7 +214,10 @@ public class CrawlerWithGraph {
 
     private void comeBackToStatus(WindowStatus status){
 
-        closeAndOpenApp();
+        if(!currentStatus().equals(ListGraph.status0)){
+            closeAndOpenApp();
+        }
+
         populateEditText();
         List<Transition> transitions = ListGraph.getPath(status.getNumber());
 

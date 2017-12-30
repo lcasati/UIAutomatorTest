@@ -31,4 +31,8 @@ public class ListGraph {
     public static List<Transition> getPath(int statusNumber){
         return paths.get(statusNumber);
     }
+
+    public static HashMap<Integer, List<Transition>> getPaths() {
+        return paths;
+    }
 }
