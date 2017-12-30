@@ -16,9 +16,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +34,7 @@ import static org.junit.Assert.assertThat;
 @SdkSuppress(minSdkVersion = 18)
 public class CrawlerWithGraph {
 
-    private static final String CACIUPPO_PACKAGE
+    private static String CACIUPPO_PACKAGE
             = "unibg.caciuppo";
     private static final int LAUNCH_TIMEOUT = 5000;
     private UiDevice mDevice;
@@ -51,6 +53,8 @@ public class CrawlerWithGraph {
         classes.add("android.widget.Button");
         classes.add("android.widget.CheckedTextView");
 
+
+        CACIUPPO_PACKAGE = readApkName();
 
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -72,12 +76,38 @@ public class CrawlerWithGraph {
         // Clear out any previous instances
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
-
         // Wait for the app to appear
         mDevice.wait(Until.hasObject(By.pkg(CACIUPPO_PACKAGE).depth(0)),
                 LAUNCH_TIMEOUT);
 
 
+    }
+
+    private String readApkName() {
+
+        File dir = Environment.getExternalStorageDirectory();
+
+        //Get the text file
+        File file = new File(dir + "/UIAutomatorTest/apk/", "apk");
+
+        //Read text from file
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+            }
+            br.close();
+        } catch (IOException e) {
+            //You'll need to add proper error handling here
+        }
+
+        Log.d("APK NAME", text.toString());
+
+        return text.toString();
     }
 
 

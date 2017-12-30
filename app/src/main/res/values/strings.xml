@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">UIAutomatorTest</string>
     <string name="test">Test</string>
+    <string name="title_activity_main">UIAutomatorTest</string>
+    <string name="text_content">Choose apk to test</string>
+    <string name="button_content">Save</string>
 </resources>
