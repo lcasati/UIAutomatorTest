@@ -1,8 +1,11 @@
-package unibg.uiautomatortest;
+package unibg.uiautomatortest.unused;
 
 
 import java.util.ArrayList;
 import java.util.List;
+
+import unibg.uiautomatortest.WindowStatus;
+import unibg.uiautomatortest.unused.Edge;
 
 public class ExplorationGraph {
 

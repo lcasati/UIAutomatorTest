@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/UIAutomatorTest.iml" filepath="$PROJECT_DIR$/UIAutomatorTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/accessibilitytestgenerator/accessibilitytestgenerator.iml" filepath="$PROJECT_DIR$/accessibilitytestgenerator/accessibilitytestgenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

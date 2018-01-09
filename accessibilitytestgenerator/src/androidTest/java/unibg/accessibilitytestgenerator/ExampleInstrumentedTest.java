@@ -1,4 +1,4 @@
-package unibg.uiautomatortest;
+package unibg.accessibilitytestgenerator;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("unibg.uiautomatortest", appContext.getPackageName());
+        assertEquals("unibg.accessibilitytestgenerator.test", appContext.getPackageName());
     }
 }

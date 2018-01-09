@@ -1,4 +1,4 @@
-package unibg.uiautomatortest;
+package unibg.uiautomatortest.unused;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +33,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import unibg.uiautomatortest.ImageUtilities;
+import unibg.uiautomatortest.WindowStatus;
 
 import static org.junit.Assert.*;
 

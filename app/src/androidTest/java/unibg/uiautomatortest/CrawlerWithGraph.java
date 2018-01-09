@@ -23,9 +23,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -34,8 +32,7 @@ import static org.junit.Assert.assertThat;
 @SdkSuppress(minSdkVersion = 18)
 public class CrawlerWithGraph {
 
-    private static String CACIUPPO_PACKAGE
-            = "unibg.caciuppo";
+    private static String PACKAGE_NAME;
     private static final int LAUNCH_TIMEOUT = 5000;
     private UiDevice mDevice;
     private List<String> classes = new ArrayList<>();
@@ -54,7 +51,13 @@ public class CrawlerWithGraph {
         classes.add("android.widget.CheckedTextView");
 
 
-        CACIUPPO_PACKAGE = readApkName();
+        try {
+            PACKAGE_NAME = readApkName();
+        } catch (IOException e) {
+            Log.e("NO PACKAGE NAME","SELECT PACKAGE FROM MAIN APP");
+            e.printStackTrace();
+            System.exit(1);
+        }
 
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -72,74 +75,60 @@ public class CrawlerWithGraph {
         // Launch the app
         Context context = InstrumentationRegistry.getContext();
         final Intent intent = context.getPackageManager()
-                .getLaunchIntentForPackage(CACIUPPO_PACKAGE);
+                .getLaunchIntentForPackage(PACKAGE_NAME);
         // Clear out any previous instances
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
         // Wait for the app to appear
-        mDevice.wait(Until.hasObject(By.pkg(CACIUPPO_PACKAGE).depth(0)),
+        mDevice.wait(Until.hasObject(By.pkg(PACKAGE_NAME).depth(0)),
                 LAUNCH_TIMEOUT);
 
 
     }
 
-    private String readApkName() {
-
-        File dir = Environment.getExternalStorageDirectory();
-
-        //Get the text file
-        File file = new File(dir + "/UIAutomatorTest/apk/", "apk");
-
-        //Read text from file
-        StringBuilder text = new StringBuilder();
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-            }
-            br.close();
-        } catch (IOException e) {
-            //You'll need to add proper error handling here
-        }
-
-        Log.d("APK NAME", text.toString());
-
-        return text.toString();
-    }
-
 
     @Test
-    public void test() throws IOException {
+    public void test(){
         populateEditText();
-        List<UiObject2> lista = mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
+        List<UiObject2> lista = mDevice.findObjects(By.pkg(PACKAGE_NAME));
         WindowStatus status0 = new WindowStatus(lista);
 
         ListGraph.addVisitedStatus(status0);
-        ListGraph.status0=status0;
+        ListGraph.status0 = status0;
 
         // TODO: CONTROLLA ECCEZIONI
-        crawl(status0);
+        try {
+            crawl(status0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         stringBuilder.append("\n\n");
-       for(int i:ListGraph.getPaths().keySet()){
-           stringBuilder.append("CAMMINO PER STATUS " + i + "\n");
-           for(Transition t:ListGraph.getPath(i)){
-               stringBuilder.append(t.toString() + "\n");
-           }
-       }
+        for (int i : ListGraph.getPaths().keySet()) {
+            stringBuilder.append("CAMMINO PER STATUS " + i + "\n");
+            for (Transition t : ListGraph.getPath(i)) {
+                stringBuilder.append(t.toString() + "\n");
+            }
+        }
 
-        File dir = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/logs/");
-        dir.mkdirs();
-        File file = new File(dir, "log.txt");
-        FileOutputStream fos = new FileOutputStream(file);
-        byte[] data = stringBuilder.toString().getBytes();
-        fos.write(data);
-        fos.flush();
-        fos.close();
+
+        try {
+            File dir = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/logs/");
+            dir.mkdirs();
+            File file = new File(dir, "log.txt");
+            FileOutputStream fos = null;
+            fos = new FileOutputStream(file);
+            byte[] data = stringBuilder.toString().getBytes();
+            fos.write(data);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -151,7 +140,7 @@ public class CrawlerWithGraph {
         for (Node node : status.getNodes()) {
 
             if (classes.contains(node.getClassName())) {
-                TestCaseGenerator.generateTestCase(CACIUPPO_PACKAGE, node, "Test" + i, status.getNumber());
+                TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i, status.getNumber());
                 stringBuilder.append("TEST DI " + node.toString() + "\n");
                 i++;
             }
@@ -182,35 +171,33 @@ public class CrawlerWithGraph {
                 case CLICK:
                     stringBuilder.append("CLICK " + node.toString());
                     mDevice.click(node.getBounds().centerX(), node.getBounds().centerY());
-                    mDevice.waitForWindowUpdate(CACIUPPO_PACKAGE, LAUNCH_TIMEOUT);
+                    mDevice.waitForWindowUpdate(PACKAGE_NAME, LAUNCH_TIMEOUT);
                     populateEditText();
-                    List<UiObject2> afterList = mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE));
+                    List<UiObject2> afterList = mDevice.findObjects(By.pkg(PACKAGE_NAME));
                     WindowStatus statusAfter = new WindowStatus(afterList);
                     if (!ListGraph.getVisitedStatuses().contains(statusAfter)) {
 
                         ListGraph.addVisitedStatus(statusAfter);
-                        stringBuilder.append("NUOVO STATUS NUMERO " + statusAfter.getNumber() );
+                        stringBuilder.append("NUOVO STATUS NUMERO " + statusAfter.getNumber());
                         takeScreenshot(statusAfter);
                         List<Transition> transitionList = new ArrayList<>();
 
-                        if(status.getNumber()!=0)
+                        if (status.getNumber() != 0)
                             transitionList.addAll(ListGraph.getPath(status.getNumber()));
 
                         transitionList.add(transition);
                         ListGraph.addPath(statusAfter.getNumber(), transitionList);
                         crawl(statusAfter);
-                    }
-                    else{
+                    } else {
                         stringBuilder.append("STATUS GIA' ESAMINATO");
                     }
                     break;
 
             }
-            if(!currentStatus().equals(status)){
+            if (!currentStatus().equals(status)) {
 
                 comeBackToStatus(status);
-            }
-            else{
+            } else {
                 stringBuilder.append("STATUS CORRENTE CORRETTO");
             }
 
@@ -220,51 +207,76 @@ public class CrawlerWithGraph {
 
     }
 
+    private String readApkName() throws IOException {
 
-    private void takeScreenshot(WindowStatus status){
+        File dir = Environment.getExternalStorageDirectory();
+
+        //Get the text file
+        File file = new File(dir + "/UIAutomatorTest/apk/", "apk");
+
+        //Read text from file
+        StringBuilder text = new StringBuilder();
+
+
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            text.append(line);
+        }
+        br.close();
+
+
+        Log.d("APK NAME", text.toString());
+
+        return text.toString();
+    }
+
+
+
+    private void takeScreenshot(WindowStatus status) {
         File dir = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshots/");
         dir.mkdirs();
         File file = new File(dir, "status" + status.getNumber() + ".png");
         mDevice.takeScreenshot(file);
     }
 
-    private WindowStatus currentStatus(){
-        return new WindowStatus(mDevice.findObjects(By.pkg(CACIUPPO_PACKAGE)));
+    private WindowStatus currentStatus() {
+        return new WindowStatus(mDevice.findObjects(By.pkg(PACKAGE_NAME)));
     }
 
-    private void populateEditText(){
+    private void populateEditText() {
         List<UiObject2> editTextViews = mDevice.findObjects(By.clazz("android.widget.EditText"));
 
-        if(editTextViews.size()!=0){
-            for(UiObject2 obj:editTextViews){
+        if (editTextViews.size() != 0) {
+            for (UiObject2 obj : editTextViews) {
                 obj.setText("test");
             }
         }
     }
 
-    private void comeBackToStatus(WindowStatus status){
+    private void comeBackToStatus(WindowStatus status) {
 
-        if(!currentStatus().equals(ListGraph.status0)){
+        if (!currentStatus().equals(ListGraph.status0)) {
             closeAndOpenApp();
         }
 
         populateEditText();
         List<Transition> transitions = ListGraph.getPath(status.getNumber());
 
-        if(transitions!=null){
-            for(Transition t:transitions){
+        if (transitions != null) {
+            for (Transition t : transitions) {
                 Node node = t.getNode();
                 switch (t.getAction()) {
 
                     case CLICK:
                         mDevice.click(node.getBounds().centerX(), node.getBounds().centerY());
-                        mDevice.waitForWindowUpdate(CACIUPPO_PACKAGE, LAUNCH_TIMEOUT);
+                        mDevice.waitForWindowUpdate(PACKAGE_NAME, LAUNCH_TIMEOUT);
                         populateEditText();
                         break;
                 }
             }
         }
-
 
 
     }
@@ -283,13 +295,13 @@ public class CrawlerWithGraph {
         // Launch the app
         Context context = InstrumentationRegistry.getContext();
         final Intent intent = context.getPackageManager()
-                .getLaunchIntentForPackage(CACIUPPO_PACKAGE);
+                .getLaunchIntentForPackage(PACKAGE_NAME);
         // Clear out any previous instances
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
 
         // Wait for the app to appear
-        mDevice.wait(Until.hasObject(By.pkg(CACIUPPO_PACKAGE).depth(0)),
+        mDevice.wait(Until.hasObject(By.pkg(PACKAGE_NAME).depth(0)),
                 LAUNCH_TIMEOUT);
 
 

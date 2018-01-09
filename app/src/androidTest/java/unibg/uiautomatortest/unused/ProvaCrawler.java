@@ -1,20 +1,14 @@
-package unibg.uiautomatortest;
+package unibg.uiautomatortest.unused;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.RemoteException;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
-import android.support.test.uiautomator.Direction;
 import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObject2;
-import android.support.test.uiautomator.UiObjectNotFoundException;
-import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
-import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +17,13 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import unibg.uiautomatortest.Node;
+import unibg.uiautomatortest.TestCaseGenerator;
+import unibg.uiautomatortest.Transition;
+import unibg.uiautomatortest.UIActions;
+import unibg.uiautomatortest.WindowStatus;
+import unibg.uiautomatortest.unused.ExplorationGraph;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
