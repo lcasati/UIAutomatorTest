@@ -57,7 +57,7 @@ public class ATG {
 
     }
 
-    public void startMainActivityFromHomeScreen()  {
+    private void startMainActivityFromHomeScreen()  {
 
 
         // Initialize UiDevice instance
@@ -88,7 +88,7 @@ public class ATG {
     }
 
 
-    public void crawl(WindowStatus status) throws IOException {
+    private void crawl(WindowStatus status) throws IOException {
 
         populateEditText();
 
@@ -138,8 +138,6 @@ public class ATG {
                         transitionList.add(transition);
                         ListGraph.addPath(statusAfter.getNumber(), transitionList);
                         crawl(statusAfter);
-                    } else {
-
                     }
                     break;
 
