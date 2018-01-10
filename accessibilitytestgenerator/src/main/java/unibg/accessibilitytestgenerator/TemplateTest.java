@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
 public class TemplateTest {
-
+/*
     private static final String PACKAGE_NAME
             = "package_name";
     private static final int LAUNCH_TIMEOUT = 5000;
@@ -127,5 +127,7 @@ public class TemplateTest {
     }
 
 
+    */
 }
+
 
