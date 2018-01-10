@@ -7,7 +7,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.Log;
 
-public class ImageUtilities {
+public class ATGImageUtilities {
 
     private static float getLuminance(int color) {
 

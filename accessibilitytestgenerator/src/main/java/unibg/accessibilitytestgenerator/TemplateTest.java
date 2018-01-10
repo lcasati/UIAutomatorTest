@@ -122,7 +122,7 @@ public class TemplateTest {
 
         // TODO: TEST DEL CONTRASTO - SCREENSHOT
 
-        double contrastRatio = ImageUtilities.contrastRatio(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshots/screenshot.png", targetView.getVisibleBounds());
+        double contrastRatio = ATGImageUtilities.contrastRatio(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshots/screenshot.png", targetView.getVisibleBounds());
         assertFalse(contrastRatio < 3);
     }
 
