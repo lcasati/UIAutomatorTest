@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
 @SdkSuppress(minSdkVersion = 18)
 public class TemplateTest {
 
-    private static final String CACIUPPO_PACKAGE
+    private static final String PACKAGE_NAME
             = "package_name";
     private static final int LAUNCH_TIMEOUT = 5000;
     private UiDevice mDevice;
@@ -52,13 +52,13 @@ public class TemplateTest {
         // Launch the app
         Context context = InstrumentationRegistry.getContext();
         final Intent intent = context.getPackageManager()
-                .getLaunchIntentForPackage(CACIUPPO_PACKAGE);
+                .getLaunchIntentForPackage(PACKAGE_NAME);
         // Clear out any previous instances
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
 
         // Wait for the app to appear
-        mDevice.wait(Until.hasObject(By.pkg(CACIUPPO_PACKAGE).depth(0)),
+        mDevice.wait(Until.hasObject(By.pkg(PACKAGE_NAME).depth(0)),
                 LAUNCH_TIMEOUT);
 
 
