@@ -3,6 +3,7 @@ package unibg.accessibilitytestgenerator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
@@ -16,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.util.List;
 
 import static junit.framework.Assert.assertFalse;
@@ -62,10 +64,19 @@ public class TemplateTest {
                 LAUNCH_TIMEOUT);
 
 
+        transitions_to_node
+
+        //// TODO: GESTISCI SCREENSHOTS
+
+        File dir = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshots/");
+        dir.mkdirs();
+        File file = new File(dir, "screenshot.png");
+        mDevice.takeScreenshot(file);
+
         List<UiObject2> list = mDevice.findObjects(By.clazz("class_name"));
 
 
-       /* for (UiObject2 obj : list) {
+       for (UiObject2 obj : list) {
 
             boolean text = conditionText;
             boolean resourceId = conditionRes;
@@ -79,14 +90,15 @@ public class TemplateTest {
 
 
         }
-        */
+
     }
 
     @Test
     public void testContentDesc() {
 
         String contentDesc = targetView.getContentDescription();
-        assertTrue(contentDesc!= null && contentDesc != "");
+        String text = targetView.getText();
+        assertTrue((contentDesc!= null && contentDesc.equals("")) || (text!=null && !text.equals("")));
 
     }
 
@@ -110,6 +122,8 @@ public class TemplateTest {
 
         // TODO: TEST DEL CONTRASTO - SCREENSHOT
 
+        double contrastRatio = ImageUtilities.contrastRatio(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshots/screenshot.png", targetView.getVisibleBounds());
+        assertFalse(contrastRatio < 3);
     }
 
 
