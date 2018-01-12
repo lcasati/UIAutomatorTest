@@ -1,9 +1,6 @@
 package unibg.uiautomatortest.unused;
 
 
-import unibg.uiautomatortest.Transition;
-import unibg.uiautomatortest.WindowStatus;
-
 public class Edge {
 
     private WindowStatus startStatus;

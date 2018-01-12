@@ -3,10 +3,6 @@ package unibg.uiautomatortest.unused;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SdkSuppress;
@@ -17,7 +13,6 @@ import android.support.test.uiautomator.UiObject2;
 import android.support.test.uiautomator.Until;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,9 +28,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-
-import unibg.uiautomatortest.ImageUtilities;
-import unibg.uiautomatortest.WindowStatus;
 
 import static org.junit.Assert.*;
 

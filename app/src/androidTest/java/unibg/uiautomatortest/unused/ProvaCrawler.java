@@ -18,13 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import unibg.uiautomatortest.Node;
-import unibg.uiautomatortest.TestCaseGenerator;
-import unibg.uiautomatortest.Transition;
-import unibg.uiautomatortest.UIActions;
-import unibg.uiautomatortest.WindowStatus;
-import unibg.uiautomatortest.unused.ExplorationGraph;
-
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -100,7 +93,7 @@ public class ProvaCrawler {
         for(Node node:status.getNodes()){
 
             if(classes.contains(node.getClassName())){
-                TestCaseGenerator.generateTestCase(CACIUPPO_PACKAGE,node, "Test" + i, status.getTransitions() );
+                TestCaseGenerator.generateTestCase(CACIUPPO_PACKAGE,node, "Testerino" + i, status.getTransitions() );
                 i++;
             }
 

@@ -1,4 +1,4 @@
-package unibg.uiautomatortest;
+package unibg.uiautomatortest.unused;
 
 import java.util.ArrayList;
 import java.util.HashMap;

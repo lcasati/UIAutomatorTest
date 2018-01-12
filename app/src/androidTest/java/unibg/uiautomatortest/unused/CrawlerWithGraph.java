@@ -1,4 +1,4 @@
-package unibg.uiautomatortest;
+package unibg.uiautomatortest.unused;
 
 import android.content.Context;
 import android.content.Intent;
@@ -84,6 +84,7 @@ public class CrawlerWithGraph {
                 LAUNCH_TIMEOUT);
 
 
+
     }
 
 
@@ -140,7 +141,7 @@ public class CrawlerWithGraph {
         for (Node node : status.getNodes()) {
 
             if (classes.contains(node.getClassName())) {
-                TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i, status.getNumber());
+                TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Testerino" + i, status.getNumber());
                 stringBuilder.append("TEST DI " + node.toString() + "\n");
                 i++;
             }

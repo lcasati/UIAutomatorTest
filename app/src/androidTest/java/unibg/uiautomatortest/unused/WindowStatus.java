@@ -1,4 +1,4 @@
-package unibg.uiautomatortest;
+package unibg.uiautomatortest.unused;
 
 
 import android.support.test.uiautomator.UiObject2;

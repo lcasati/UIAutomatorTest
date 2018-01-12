@@ -28,12 +28,20 @@ import static org.junit.Assert.assertThat;
 public class ATG {
 
     private UiDevice mDevice;
-    private List<String> classes = TestCaseGenerator.classesToTest();
+    private static String TEST_STRING;
     private static  String PACKAGE_NAME;
     private static final int LAUNCH_TIMEOUT = 5000;
     private int i=0;
 
-
+    private List<String> classes = new ArrayList<String>(){
+        {
+            add("android.widget.TextView");
+            add("android.widget.ImageView");
+            add("android.widget.ImageButton");
+            add("android.widget.Button");
+            add("android.widget.CheckedTextView");
+        }
+    };
 
     public ATG(String packageName){
         PACKAGE_NAME = packageName;
@@ -55,6 +63,12 @@ public class ATG {
             e.printStackTrace();
         }
 
+    }
+
+
+    // TODO: CAMBIARE LISTA CLASSI DA CONTROLLARE
+    public void setClassesToCheck(List<String> classes){
+        this.classes = classes;
     }
 
     private void startMainActivityFromHomeScreen()  {
@@ -129,7 +143,6 @@ public class ATG {
                     if (!ListGraph.getVisitedStatuses().contains(statusAfter)) {
 
                         ListGraph.addVisitedStatus(statusAfter);
-                        takeScreenshot(statusAfter);
                         List<Transition> transitionList = new ArrayList<>();
 
                         if (status.getNumber() != 0)
@@ -155,39 +168,6 @@ public class ATG {
 
     }
 
-    private String readApkName() throws IOException {
-
-        File dir = Environment.getExternalStorageDirectory();
-
-        //Get the text file
-        File file = new File(dir + "/UIAutomatorTest/apk/", "apk");
-
-        //Read text from file
-        StringBuilder text = new StringBuilder();
-
-
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            text.append(line);
-        }
-        br.close();
-
-
-        Log.d("APK NAME", text.toString());
-
-        return text.toString();
-    }
-
-
-
-    private void takeScreenshot(WindowStatus status) {
-        File dir = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshots/");
-        dir.mkdirs();
-        File file = new File(dir, "status" + status.getNumber() + ".png");
-        mDevice.takeScreenshot(file);
-    }
 
     private WindowStatus currentStatus() {
         return new WindowStatus(mDevice.findObjects(By.pkg(PACKAGE_NAME)));
@@ -198,7 +178,7 @@ public class ATG {
 
         if (editTextViews.size() != 0) {
             for (UiObject2 obj : editTextViews) {
-                obj.setText("test");
+                obj.setText(TEST_STRING);
             }
         }
     }

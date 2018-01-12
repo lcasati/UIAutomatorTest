@@ -1,7 +1,6 @@
-package unibg.uiautomatortest;
+package unibg.uiautomatortest.unused;
 
 import android.os.Environment;
-import android.support.test.uiautomator.UiObject2;
 import android.util.Log;
 
 import java.io.BufferedReader;
