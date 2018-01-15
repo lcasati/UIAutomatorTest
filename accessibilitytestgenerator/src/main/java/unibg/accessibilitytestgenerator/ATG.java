@@ -123,15 +123,6 @@ public class ATG {
             }
 
 
-           /* if (node.isScrollable()) {
-                status.getTransitions().add(new Transition(UIActions.LONG_CLICK, node));
-            }
-
-
-            if (node.isLong_clickable()) {
-                status.getTransitions().add(new Transition(UIActions.SCROLL, node));
-            }*/
-
         }
 
         for (Transition transition : status.getTransitions()) {
