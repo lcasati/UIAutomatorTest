@@ -121,10 +121,6 @@ public class ATGImageUtilities {
 
         float backgroundMeanPixel = ((topbackgroundColor * topbackgroundSize) + (leftbackgroundColor * leftbackgroundSize) + (rightbackgroundColor * rightbackgroundSize) + (bottombackgroundColor * bottombackgroundSize)) / backgroundSize;
 
-
-        Log.d("CONTRASTO", "background " + Float.toString(backgroundMeanPixel));
-        Log.d("CONTRASTO", "foreground " + Float.toString(foregroundMeanPixel));
-
         if (backgroundMeanPixel > foregroundMeanPixel) {
             return (backgroundMeanPixel + 0.05) / (foregroundMeanPixel + 0.05);
         } else {

@@ -15,7 +15,7 @@ import java.util.List;
 public class TestCaseGenerator {
 
 
-    public static String uiautomatorName = "UIAutomatorTest";
+    public static String uiautomatorName = "UIAccessibilityTests";
 
     public static List<String> classesToTest(){
         List<String> classes = new ArrayList<>();

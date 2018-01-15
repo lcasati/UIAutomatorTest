@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThat;
 public class ATG {
 
     private UiDevice mDevice;
-    private static String TEST_STRING;
+    private static String TEST_STRING = "test";
     private static  String PACKAGE_NAME;
     private static final int LAUNCH_TIMEOUT = 5000;
     private int i=0;
@@ -69,6 +69,10 @@ public class ATG {
     // TODO: CAMBIARE LISTA CLASSI DA CONTROLLARE
     public void setClassesToCheck(List<String> classes){
         this.classes = classes;
+    }
+
+    public void setTestString(String string){
+        TEST_STRING=string;
     }
 
     private void startMainActivityFromHomeScreen()  {
