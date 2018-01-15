@@ -71,6 +71,7 @@ public class ATG {
         this.classes = classes;
     }
 
+    //settare stringa per riempimento edittext
     public void setTestString(String string){
         TEST_STRING=string;
     }
