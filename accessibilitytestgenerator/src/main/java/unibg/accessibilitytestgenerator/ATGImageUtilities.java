@@ -143,7 +143,7 @@ public class ATGImageUtilities {
 
     }
 
-    public static int computeOtsuThresholdLevel(int[] image,
+    public static double computeOtsuThresholdLevel(int[] image,
                                                 int numOfLevels) {
 
         // Total number of pixels [N]
@@ -153,10 +153,11 @@ public class ATGImageUtilities {
         int[] histogram = new int[numOfLevels];
         // Compute the histogram of the grayscale input
         for (int i = 0; i < image.length; i++) {
-            histogram[(int)getLuminance(image[i])*1000]++; // [ni]
+            histogram[(int)(getLuminance(image[i])*100)]++; // [ni]
         }
 
         Log.d("CONTRASTO", Arrays.toString(histogram));
+
 
         int meanTotal = 0; // [muT]
         // Compute mean value for the overall histogram
@@ -204,7 +205,29 @@ public class ATGImageUtilities {
             }
         }
 
-        return thresholdValue;
+
+        int sum1=0;
+        int total1=0;
+        int sum2=0;
+        int total2=0;
+
+        for(int i=0; i<histogram.length;i++){
+            if(i<=thresholdValue){
+                sum1+= i * histogram[i];
+                total1+=histogram[i];
+            }
+            else{
+                sum2+= i * histogram[i];
+                total2+=histogram[i];
+            }
+        }
+
+        double mean1 = (double) sum1 / total1;
+        double mean2 = (double) sum2/total2;
+
+        return (mean2 + 0.05)/(mean1 + 0.05);
+
+
     }
 
 

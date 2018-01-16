@@ -112,10 +112,12 @@ public class Otsutest {
         }
 
         int[] pixels = new int[croppedBitmap.getHeight() * croppedBitmap.getWidth()];
-        Log.d("CONRASTO", Integer.toString(pixels.length));
+        Log.d("CONTRASTO", Integer.toString(pixels.length));
         croppedBitmap.getPixels(pixels, 0, croppedBitmap.getWidth(), 0, 0, croppedBitmap.getWidth(), croppedBitmap.getHeight());
 
-        Log.d("CONTRASTO", Integer.toString(ATGImageUtilities.computeOtsuThresholdLevel(pixels,1001)));
+        Log.d("CONTRASTO", Double.toString(ATGImageUtilities.computeOtsuThresholdLevel(pixels,101)));
+
+
 
     }
 
