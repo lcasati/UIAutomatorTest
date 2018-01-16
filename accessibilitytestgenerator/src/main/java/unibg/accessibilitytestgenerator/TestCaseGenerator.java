@@ -8,8 +8,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class TestCaseGenerator {
@@ -162,6 +164,8 @@ public class TestCaseGenerator {
 
         return text.toString();
     }
+
+
 
     private static void printTestCase(String appPackage, String testCase, String fileName) throws IOException {
 
