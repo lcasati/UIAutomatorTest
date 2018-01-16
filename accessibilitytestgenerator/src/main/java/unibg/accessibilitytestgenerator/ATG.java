@@ -48,19 +48,27 @@ public class ATG {
     }
 
     public  void generateTestCases(){
-        startMainActivityFromHomeScreen();
-        populateEditText();
-        List<UiObject2> lista = mDevice.findObjects(By.pkg(PACKAGE_NAME));
-        WindowStatus status0 = new WindowStatus(lista);
-
-        ListGraph.addVisitedStatus(status0);
-        ListGraph.status0 = status0;
-
-        // TODO: CONTROLLA ECCEZIONI
-        try {
+        try{
+            checkTemplate();
+            startMainActivityFromHomeScreen();
+            populateEditText();
+            List<UiObject2> lista = mDevice.findObjects(By.pkg(PACKAGE_NAME));
+            WindowStatus status0 = new WindowStatus(lista);
+            ListGraph.addVisitedStatus(status0);
+            ListGraph.status0 = status0;
             crawl(status0);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    private void checkTemplate() throws IOException {
+        File file = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/template");
+        if(!file.exists()){
+            Log.d("CONTRASTO" ,"puppa");
+            TemplateTest.createTemplate();
         }
 
     }
