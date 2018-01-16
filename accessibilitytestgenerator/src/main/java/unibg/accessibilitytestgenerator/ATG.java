@@ -67,7 +67,6 @@ public class ATG {
     private void checkTemplate() throws IOException {
         File file = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/template");
         if(!file.exists()){
-            Log.d("CONTRASTO" ,"puppa");
             TemplateTest.createTemplate();
         }
 

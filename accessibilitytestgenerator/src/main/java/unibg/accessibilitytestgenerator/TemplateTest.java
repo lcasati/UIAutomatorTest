@@ -154,7 +154,7 @@ public class TemplateTest {
                 "    @Test\n" +
                 "    public void testContrast() {\n" +
                 "\n" +
-                "        double contrastRatio = ATGImageUtilities.contrastRatio(Environment.getExternalStorageDirectory() + \"/UIAccessibilityTests/screenshots/screenshot.png\", targetView.getVisibleBounds());\n" +
+                "        double contrastRatio = ATGImageUtilities.contrastRatioOtsu(Environment.getExternalStorageDirectory() + \"/UIAccessibilityTests/screenshot.png\", targetView.getVisibleBounds());\n" +
                 "        File file = new File(Environment.getExternalStorageDirectory() + \"/UIAccessibilityTests/screenshot.png\");\n" +
                 "        file.delete();\n" +
                 "\t\tassertFalse(contrastRatio < 3);\n" +

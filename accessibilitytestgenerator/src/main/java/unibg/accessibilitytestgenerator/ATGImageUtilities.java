@@ -11,6 +11,9 @@ import java.util.Arrays;
 
 public class ATGImageUtilities {
 
+
+    private static int numOfLevels=101;
+
     private static float getLuminance(int color) {
 
         double red = (double) Color.red(color) / 255;
@@ -143,8 +146,14 @@ public class ATGImageUtilities {
 
     }
 
-    public static double computeOtsuThresholdLevel(int[] image,
-                                                int numOfLevels) {
+    public static double contrastRatioOtsu(String filename, Rect bounds) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bitmap = BitmapFactory.decodeFile(filename, options);
+        Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, bounds.left, bounds.top, bounds.width(), bounds.height());
+        int[] image = new int[croppedBitmap.getHeight() * croppedBitmap.getWidth()];
+        croppedBitmap.getPixels(image, 0, croppedBitmap.getWidth(), 0, 0, croppedBitmap.getWidth(), croppedBitmap.getHeight());
+
 
         // Total number of pixels [N]
         int total = image.length;
@@ -155,8 +164,6 @@ public class ATGImageUtilities {
         for (int i = 0; i < image.length; i++) {
             histogram[(int)(getLuminance(image[i])*100)]++; // [ni]
         }
-
-        Log.d("CONTRASTO", Arrays.toString(histogram));
 
 
         int meanTotal = 0; // [muT]

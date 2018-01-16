@@ -83,39 +83,7 @@ public class Otsutest {
 
         }
 
-
-        Log.d("CONTRASTO", targetView.getVisibleBounds().toString());
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshot.png", options);
-
-
-
-        Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, targetView.getVisibleBounds().left,  targetView.getVisibleBounds().top,  targetView.getVisibleBounds().width(), targetView.getVisibleBounds().height());
-        File print = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/cropped.png");
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(print);
-            croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-            // PNG is a lossless format, the compression factor (100) is ignored
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        int[] pixels = new int[croppedBitmap.getHeight() * croppedBitmap.getWidth()];
-        Log.d("CONTRASTO", Integer.toString(pixels.length));
-        croppedBitmap.getPixels(pixels, 0, croppedBitmap.getWidth(), 0, 0, croppedBitmap.getWidth(), croppedBitmap.getHeight());
-
-        Log.d("CONTRASTO", Double.toString(ATGImageUtilities.computeOtsuThresholdLevel(pixels,101)));
+        Log.d("CONTRASTO", Double.toString(ATGImageUtilities.contrastRatioOtsu(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshot.png",targetView.getVisibleBounds())));
 
 
 
