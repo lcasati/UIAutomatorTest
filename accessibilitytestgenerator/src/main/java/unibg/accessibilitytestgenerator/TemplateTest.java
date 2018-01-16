@@ -140,15 +140,16 @@ public class TemplateTest {
                 "    @Test\n" +
                 "    public void testSize() {\n" +
                 "\n" +
-                "\n" +
-                "        DisplayMetrics metrics = InstrumentationRegistry.getContext().getResources().getDisplayMetrics();\n" +
-                "\n" +
-                "        int displayDpi = metrics.densityDpi;\n" +
-                "        Rect viewModel = targetView.getVisibleBounds();\n" +
-                "        int heightDP= (int) (Math.abs(viewModel.height())/displayDpi);\n" +
-                "        int widthDP= (int) (Math.abs(viewModel.width())/displayDpi);\n" +
-                "        assertFalse(heightDP<48 || widthDP<48);\n" +
-                "    }\n" +
+                "        if(targetView.isClickable() || targetView.isCheckable()){\n" +
+                "            DisplayMetrics metrics = InstrumentationRegistry.getContext().getResources().getDisplayMetrics();\n" +
+                "            int displayDpi = metrics.densityDpi;\n" +
+                "            Rect viewModel = targetView.getVisibleBounds();\n" +
+                "            int heightDP= (int) (Math.abs(viewModel.height())/displayDpi);\n" +
+                "            int widthDP= (int) (Math.abs(viewModel.width())/displayDpi);\n" +
+                "            assertFalse(heightDP<48 || widthDP<48);\n" +
+                "        }\n" +
+                "       \n" +
+                "    }"+
                 "\n" +
                 "\n" +
                 "    @Test\n" +
