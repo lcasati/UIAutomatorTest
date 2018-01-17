@@ -109,6 +109,33 @@ public class ATG {
         TEST_STRING=string;
     }
 
+    /**
+     *
+     * Generate test files for the components in the current window
+     * @throws IOException
+     */
+    public void generateTestsForCurrentWindow() {
+        try{
+
+            checkTemplate();
+            mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+            List<UiObject2> lista = mDevice.findObjects(By.pkg(PACKAGE_NAME));
+            WindowStatus status = new WindowStatus(lista);
+            for (Node node : status.getNodes()) {
+
+                if (classes.contains(node.getClassName())) {
+                    TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i, status.getNumber());
+                    i++;
+                }
+
+            }
+            i=0;
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     private void startMainActivityFromHomeScreen()  {
 
 
@@ -199,14 +226,12 @@ public class ATG {
             if (!currentStatus().equals(status)) {
 
                 comeBackToStatus(status);
-            } else {
-
             }
 
         }
 
         //closeAndOpenApp();
-
+        i=0;
     }
 
 
