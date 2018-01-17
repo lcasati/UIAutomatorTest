@@ -1,5 +1,9 @@
+package unibg.uiautomatortest;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
@@ -10,6 +14,8 @@ import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
 import android.support.test.uiautomator.Until;
 import android.util.DisplayMetrics;
+import android.util.Log;
+
 import unibg.accessibilitytestgenerator.ATGImageUtilities;
 
 import org.junit.Before;
@@ -17,6 +23,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.Assert.assertFalse;
@@ -26,10 +34,10 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
-public class Test6 {
+public class Test3 {
 
     private static final String PACKAGE_NAME
-            = "unibg.caciuppo";
+            = "unibg.testapp1";
     private static final int LAUNCH_TIMEOUT = 5000;
     private UiDevice mDevice;
     private UiObject2 targetView = null;
@@ -63,14 +71,7 @@ public class Test6 {
                 LAUNCH_TIMEOUT);
 
 
-         List<UiObject2> editTextViews = mDevice.findObjects(By.clazz("android.widget.EditText")); 
-if (editTextViews.size() != 0) {
- for (UiObject2 obj : editTextViews) {
- obj.setText("test");
- }
-}
-mDevice.click(540, 949); 
-mDevice.waitForWindowUpdate(PACKAGE_NAME, 5000);
+         
 
 
         File dir = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/");
@@ -78,16 +79,16 @@ mDevice.waitForWindowUpdate(PACKAGE_NAME, 5000);
         File file = new File(dir, "screenshot.png");
         mDevice.takeScreenshot(file);
 
-        List<UiObject2> list = mDevice.findObjects(By.clazz("android.widget.ImageView"));
+        List<UiObject2> list = mDevice.findObjects(By.clazz("android.widget.Button"));
 
 
        for (UiObject2 obj : list) {
 
             boolean text = obj.getText()==null;
-            boolean resourceId = obj.getResourceName()==null;
-            boolean packageName = obj.getApplicationPackage()!=null && obj.getApplicationPackage().equals("unibg.caciuppo");
-            boolean contentDesc = obj.getContentDescription()!=null && obj.getContentDescription().equals("Altre opzioni");
-            boolean bounds = obj.getVisibleBounds()!=null && obj.getVisibleBounds().toString().equals("Rect(975, 73 - 1080, 199)");
+            boolean resourceId = obj.getResourceName()!=null && obj.getResourceName().equals("unibg.testapp1:id/button4");
+            boolean packageName = obj.getApplicationPackage()!=null && obj.getApplicationPackage().equals("unibg.testapp1");
+            boolean contentDesc = obj.getContentDescription()==null;
+            boolean bounds = obj.getVisibleBounds()!=null && obj.getVisibleBounds().toString().equals("Rect(105, 1458 - 336, 1584)");
 
             if (text && resourceId && packageName && contentDesc && bounds) {
                 targetView = obj;
@@ -98,37 +99,15 @@ mDevice.waitForWindowUpdate(PACKAGE_NAME, 5000);
 
     }
 
-    @Test
-    public void testContentDesc() {
-
-        String contentDesc = targetView.getContentDescription();
-        String text = targetView.getText();
-        assertTrue((contentDesc!= null && contentDesc.equals("")) || (text!=null && !text.equals("")));
-
-    }
-
-    @Test
-    public void testSize() {
-
-        if(targetView.isClickable() || targetView.isCheckable()){
-            DisplayMetrics metrics = InstrumentationRegistry.getContext().getResources().getDisplayMetrics();
-            int displayDpi = metrics.densityDpi;
-            Rect viewModel = targetView.getVisibleBounds();
-            int heightDP= (int) (Math.abs(viewModel.height())/displayDpi);
-            int widthDP= (int) (Math.abs(viewModel.width())/displayDpi);
-            assertFalse(heightDP<48 || widthDP<48);
-        }
-
-    }
-
 
     @Test
     public void testContrast() {
 
-        double contrastRatio = ATGImageUtilities.contrastRatioOtsu(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshots/screenshot.png", targetView.getVisibleBounds());
+        double contrastRatio = ATGImageUtilities.contrastRatioOtsu(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshot.png", targetView.getVisibleBounds());
+        Log.d("CONTRASTO", Double.toString(contrastRatio));
         File file = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/screenshot.png");
         file.delete();
-		assertFalse(contrastRatio < 3);
+        assertFalse(contrastRatio < 3);
     }
 
 

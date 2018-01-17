@@ -160,7 +160,12 @@ public class ATGImageUtilities {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = BitmapFactory.decodeFile(filename, options);
-        Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, bounds.left, bounds.top, bounds.width(), bounds.height());
+        int left= bounds.left - 5 >= 0 ? bounds.left-5 : 0;
+        int top = bounds.top - 5 >= 0 ? bounds.top - 5 : 0;
+        int width = bounds.right + 5 <= bitmap.getWidth() ? bounds.right + 5 - left : bitmap.getWidth() - left;
+        int height = bounds.bottom + 5 <= bitmap.getHeight() ? bounds.bottom +5 - top : bitmap.getHeight() - top;
+
+        Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, left, top, width, height);
         int[] image = new int[croppedBitmap.getHeight() * croppedBitmap.getWidth()];
         croppedBitmap.getPixels(image, 0, croppedBitmap.getWidth(), 0, 0, croppedBitmap.getWidth(), croppedBitmap.getHeight());
 
@@ -225,24 +230,24 @@ public class ATGImageUtilities {
 
         //calculate the mean luminance before and after the threshold
 
-        int sum1=0;
+        double sum1=0;
         int total1=0;
-        int sum2=0;
+        double sum2=0;
         int total2=0;
 
         for(int i=0; i<histogram.length;i++){
             if(i<=thresholdValue){
-                sum1+= i * histogram[i];
+                sum1+= ((double)i/100) * histogram[i];
                 total1+=histogram[i];
             }
             else{
-                sum2+= i * histogram[i];
+                sum2+= ((double)i/100) * histogram[i];
                 total2+=histogram[i];
             }
         }
 
-        double mean1 = (double) sum1 / total1;
-        double mean2 = (double) sum2/total2;
+        double mean1 =  sum1 / total1;
+        double mean2 =  sum2/total2;
 
         //return the contrast ratio
         return (mean2 + 0.05)/(mean1 + 0.05);
