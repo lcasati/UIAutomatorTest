@@ -79,29 +79,11 @@ public class TemplateTest {
                 "    @Before\n" +
                 "    public void startMainActivityFromHomeScreen() {\n" +
                 "\n" +
+                "         List<UiObject2> editTextViews;\n"+
                 "        // Initialize UiDevice instance\n" +
                 "        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());\n" +
                 "\n" +
-                "        // Start from the home screen\n" +
-                "        mDevice.pressHome();\n" +
-                "\n" +
-                "        // Wait for launcher\n" +
-                "        final String launcherPackage = mDevice.getLauncherPackageName();\n" +
-                "        assertThat(launcherPackage, notNullValue());\n" +
-                "        mDevice.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)),\n" +
-                "                LAUNCH_TIMEOUT);\n" +
-                "\n" +
-                "        // Launch the app\n" +
-                "        Context context = InstrumentationRegistry.getContext();\n" +
-                "        final Intent intent = context.getPackageManager()\n" +
-                "                .getLaunchIntentForPackage(PACKAGE_NAME);\n" +
-                "        // Clear out any previous instances\n" +
-                "        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);\n" +
-                "        context.startActivity(intent);\n" +
-                "\n" +
-                "        // Wait for the app to appear\n" +
-                "        mDevice.wait(Until.hasObject(By.pkg(PACKAGE_NAME).depth(0)),\n" +
-                "                LAUNCH_TIMEOUT);\n" +
+                "start_application" +
                 "\n" +
                 "\n" +
                 "        transitions_to_node\n" +

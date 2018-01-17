@@ -32,7 +32,7 @@ import static org.junit.Assert.assertThat;
 public class ATG {
 
     private UiDevice mDevice;
-    private static String TEST_STRING = "test";
+    public static String TEST_STRING = "test";
     private static  String PACKAGE_NAME;
     private static final int LAUNCH_TIMEOUT = 5000;
     private int i=0;
@@ -77,6 +77,7 @@ public class ATG {
             ListGraph.addVisitedStatus(status0);
             ListGraph.status0 = status0;
             crawl(status0);
+            i=0;
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -115,6 +116,8 @@ public class ATG {
      * @throws IOException
      */
     public void generateTestsForCurrentWindow() {
+
+        // TODO: POPULATE EDITTEXT WITH TEXT ALREADY PRESENT
         try{
 
             checkTemplate();
@@ -124,7 +127,7 @@ public class ATG {
             for (Node node : status.getNodes()) {
 
                 if (classes.contains(node.getClassName())) {
-                    TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i, status.getNumber());
+                    TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i,-1);
                     i++;
                 }
 
@@ -231,7 +234,6 @@ public class ATG {
         }
 
         //closeAndOpenApp();
-        i=0;
     }
 
 

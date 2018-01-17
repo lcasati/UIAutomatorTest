@@ -1,17 +1,13 @@
 package unibg.accessibilitytestgenerator;
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Contains the methods used to generate the test files
@@ -25,13 +21,15 @@ public class TestCaseGenerator {
     /**
      * Generates the java file containing the test cases for a certain component.
      * It fills the template file with the information about the component that needs to be tested.
-     * @param appPackage package of the tested app
-     * @param node node that needs to be tested
-     * @param fileName name of the generated java file
+     *
+     * statusNumber -1 per generare test per la window corrente
+     * @param appPackage   package of the tested app
+     * @param node         node that needs to be tested
+     * @param fileName     name of the generated java file
      * @param statusNumber number of the status of the node
      * @throws IOException
      */
-    public static void generateTestCase(String appPackage, Node node, String fileName,int statusNumber) throws IOException {
+    public static void generateTestCase(String appPackage, Node node, String fileName, int statusNumber) throws IOException {
 
         //get template test from the file in UIAccessibilityTests
         String template = getTemplate();
@@ -41,6 +39,31 @@ public class TestCaseGenerator {
         template = template.replaceAll("package_name", appPackage);
 
         template = template.replaceAll("class_name", node.getClassName());
+
+        if (statusNumber < 0) {
+            template = template.replaceAll("start_application", "");
+        } else {
+            template = template.replaceAll("start_application", "        // Start from the home screen\n" +
+                    "        mDevice.pressHome();\n" +
+                    "\n" +
+                    "        // Wait for launcher\n" +
+                    "        final String launcherPackage = mDevice.getLauncherPackageName();\n" +
+                    "        assertThat(launcherPackage, notNullValue());\n" +
+                    "        mDevice.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)),\n" +
+                    "                LAUNCH_TIMEOUT);\n" +
+                    "\n" +
+                    "        // Launch the app\n" +
+                    "        Context context = InstrumentationRegistry.getContext();\n" +
+                    "        final Intent intent = context.getPackageManager()\n" +
+                    "                .getLaunchIntentForPackage(PACKAGE_NAME);\n" +
+                    "        // Clear out any previous instances\n" +
+                    "        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);\n" +
+                    "        context.startActivity(intent);\n" +
+                    "\n" +
+                    "        // Wait for the app to appear\n" +
+                    "        mDevice.wait(Until.hasObject(By.pkg(PACKAGE_NAME).depth(0)),\n" +
+                    "                LAUNCH_TIMEOUT);\n");
+        }
 
 
         String textCond;
@@ -93,40 +116,42 @@ public class TestCaseGenerator {
         template = template.replaceAll("conditionBounds", boundsCond);
 
 
-        //steps to get to the right status
-        if(statusNumber==0){
-
+        if (statusNumber < 0) {
             template = template.replaceAll("transitions_to_node", " ");
-        }
-        else{
-            StringBuilder builder = new StringBuilder();
-            List<Transition> transitions = ListGraph.getPath(statusNumber);
-            for(Transition t:transitions){
+        } else {
+            //steps to get to the right status
+            if (statusNumber == 0) {
 
-                //populate textview
-                builder.append(" List<UiObject2> editTextViews = mDevice.findObjects(By.clazz(\"android.widget.EditText\")); \n");
-                builder.append("if (editTextViews.size() != 0) {\n");
-                builder.append(" for (UiObject2 obj : editTextViews) {\n");
-                builder.append(" obj.setText(\"test\");\n");
-                builder.append(" }\n");
-                builder.append("}\n");
+                template = template.replaceAll("transitions_to_node", " ");
+            } else {
+                StringBuilder builder = new StringBuilder();
+                List<Transition> transitions = ListGraph.getPath(statusNumber);
+                for (Transition t : transitions) {
 
-                switch (t.getAction()){
-
-                    case CLICK: builder.append("mDevice.click(" + t.getNode().getBounds().centerX() + ", " + t.getNode().getBounds().centerY() + "); \n");
-                        builder.append("mDevice.waitForWindowUpdate(PACKAGE_NAME, " + 5000 + ");");
-
-
+                    //populate textview
+                    builder.append("        editTextViews = mDevice.findObjects(By.clazz(\"android.widget.EditText\"));\n" +
+                            "\n" +
+                            "        if (editTextViews.size() != 0) {\n" +
+                            "            for (UiObject2 obj : editTextViews) {\n" +
+                            "                obj.setText(\""+ ATG.TEST_STRING +"\");\n" +
+                            "            }\n" +
+                            "        }\n");
 
 
+                    switch (t.getAction()) {
+
+                        case CLICK:
+                            builder.append("        mDevice.click(" + t.getNode().getBounds().centerX() + ", " + t.getNode().getBounds().centerY() + "); \n");
+                            builder.append("        mDevice.waitForWindowUpdate(PACKAGE_NAME, " + 5000 + ");\n");
+
+
+                    }
                 }
+                template = template.replaceAll("transitions_to_node", builder.toString());
             }
-            template = template.replaceAll("transitions_to_node", builder.toString());
         }
-
         printTestCase(appPackage, template, fileName);
     }
-
 
 
     private static String getTemplate() {
@@ -135,7 +160,7 @@ public class TestCaseGenerator {
         File dir = Environment.getExternalStorageDirectory();
 
         //Get the text file
-        File file = new File(dir + "/" + uiautomatorName  + "/", "template");
+        File file = new File(dir + "/" + uiautomatorName + "/", "template");
 
         //Read text from file
         StringBuilder text = new StringBuilder();
@@ -157,13 +182,12 @@ public class TestCaseGenerator {
     }
 
 
-
     private static void printTestCase(String appPackage, String testCase, String fileName) throws IOException {
 
-        File file = new File(Environment.getExternalStorageDirectory()  + "/" + uiautomatorName  + "/" + appPackage + "/");
+        File file = new File(Environment.getExternalStorageDirectory() + "/" + uiautomatorName + "/" + appPackage + "/");
         file.mkdirs();
 
-        File output = new File(file, fileName+ ".java");
+        File output = new File(file, fileName + ".java");
         FileOutputStream fos = new FileOutputStream(output);
         byte[] data = testCase.getBytes();
         fos.write(data);

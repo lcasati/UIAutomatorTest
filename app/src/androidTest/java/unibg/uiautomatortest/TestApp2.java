@@ -1,6 +1,5 @@
 package unibg.uiautomatortest;
 
-
 import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -14,16 +13,16 @@ import unibg.accessibilitytestgenerator.ATG;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
-public class TestCurrentWindow {
+public class TestApp2 {
 
 
     @Test
     public void test(){
-        ATG atg = new ATG("unibg.caciuppo");
+        ATG atg = new ATG("unibg.testapp2");
         List<String> classes = new ArrayList<>();
-        classes.add("android.widget.Button");
+        classes.add("android.widget.TextView");
         atg.setClassesToCheck(classes);
-        atg.generateTestsForCurrentWindow();
-    }
+        atg.generateTestCases();
 
+    }
 }
