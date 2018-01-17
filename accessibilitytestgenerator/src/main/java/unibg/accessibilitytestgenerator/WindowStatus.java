@@ -6,6 +6,10 @@ import android.support.test.uiautomator.UiObject2;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Describes the window content at a certain moment.
+ * Every graphic component is saved in a list of nodes.
+ */
 public class WindowStatus {
 
     private List<Node> nodes;

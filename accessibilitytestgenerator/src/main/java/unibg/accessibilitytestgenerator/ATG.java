@@ -25,6 +25,10 @@ import java.util.List;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Provides methods for the automated generation of accessibility tests
+ *
+ */
 public class ATG {
 
     private UiDevice mDevice;
@@ -33,6 +37,7 @@ public class ATG {
     private static final int LAUNCH_TIMEOUT = 5000;
     private int i=0;
 
+    //components that needs to be tested, for every component it will be generated a java file with the test cases
     private List<String> classes = new ArrayList<String>(){
         {
             add("android.widget.TextView");
@@ -43,15 +48,30 @@ public class ATG {
         }
     };
 
+    /**
+     *
+     * @param packageName The name of the package of the app under test
+     */
     public ATG(String packageName){
         PACKAGE_NAME = packageName;
     }
 
+
+    /**
+     * Generates a java file for every component of the app that should be tested.
+     * The method explores the app and every time it finds something changed in the window, it generates tests for every component.
+     */
     public  void generateTestCases(){
         try{
+            //check if template file is already created, if not it creates it
             checkTemplate();
+
+            //start the app that needs to be tested
             startMainActivityFromHomeScreen();
+
+            //populate the edittext views with a test string
             populateEditText();
+
             List<UiObject2> lista = mDevice.findObjects(By.pkg(PACKAGE_NAME));
             WindowStatus status0 = new WindowStatus(lista);
             ListGraph.addVisitedStatus(status0);
@@ -73,12 +93,18 @@ public class ATG {
     }
 
 
-    // TODO: CAMBIARE LISTA CLASSI DA CONTROLLARE
+    /**
+     * Provide the class with a custom list of classes of the component that the user wants tested
+     * @param classes The list of the classes
+     */
     public void setClassesToCheck(List<String> classes){
         this.classes = classes;
     }
 
-    //settare stringa per riempimento edittext
+    /**
+     * Provide the string used to populate the EditText views when exploring the app
+     * @param string
+     */
     public void setTestString(String string){
         TEST_STRING=string;
     }
@@ -113,11 +139,19 @@ public class ATG {
 
     }
 
-
+    /**
+     * Explore the app, generate tests for every component indicated by the list of classes.
+     * Every time it finds a new window status (different content never found before), it goes deeper and explores it.
+     *
+     * @param status
+     * @throws IOException
+     */
     private void crawl(WindowStatus status) throws IOException {
 
+        //put test string into EditText views
         populateEditText();
 
+        //for every component in the status, generates test if their classes are in the list
         for (Node node : status.getNodes()) {
 
             if (classes.contains(node.getClassName())) {
@@ -125,7 +159,7 @@ public class ATG {
                 i++;
             }
 
-
+            //add transaction to a possible new status
             if (node.isClickable() || node.isCheckable()) {
                 status.getTransitions().add(new Transition(UIActions.CLICK, node));
             }
@@ -133,21 +167,25 @@ public class ATG {
 
         }
 
+        //check the transations, if one leads to a new status explore it
         for (Transition transition : status.getTransitions()) {
             Node node = transition.getNode();
             switch (transition.getAction()) {
 
                 case CLICK:
+
                     mDevice.click(node.getBounds().centerX(), node.getBounds().centerY());
                     mDevice.waitForWindowUpdate(PACKAGE_NAME, LAUNCH_TIMEOUT);
+
                     populateEditText();
                     List<UiObject2> afterList = mDevice.findObjects(By.pkg(PACKAGE_NAME));
                     WindowStatus statusAfter = new WindowStatus(afterList);
                     if (!ListGraph.getVisitedStatuses().contains(statusAfter)) {
 
                         ListGraph.addVisitedStatus(statusAfter);
-                        List<Transition> transitionList = new ArrayList<>();
 
+                        //add path to get to the new status from status 0
+                        List<Transition> transitionList = new ArrayList<>();
                         if (status.getNumber() != 0)
                             transitionList.addAll(ListGraph.getPath(status.getNumber()));
 

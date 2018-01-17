@@ -9,6 +9,9 @@ import android.util.Log;
 
 import java.util.Arrays;
 
+/**
+ * Provides methods for the evaluation of the contrast ratio of a component
+ */
 public class ATGImageUtilities {
 
 
@@ -146,6 +149,13 @@ public class ATGImageUtilities {
 
     }
 
+    /**
+     * Returns the contrast ratio, using the Otsu threshold to establish what's in the background and what's in the foreground
+     *
+     * @param filename The path of the screenshot where the component is
+     * @param bounds The coordinates of the component
+     * @return the contrast ratio
+     */
     public static double contrastRatioOtsu(String filename, Rect bounds) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -213,6 +223,8 @@ public class ATGImageUtilities {
         }
 
 
+        //calculate the mean luminance before and after the threshold
+
         int sum1=0;
         int total1=0;
         int sum2=0;
@@ -232,6 +244,7 @@ public class ATGImageUtilities {
         double mean1 = (double) sum1 / total1;
         double mean2 = (double) sum2/total2;
 
+        //return the contrast ratio
         return (mean2 + 0.05)/(mean1 + 0.05);
 
 

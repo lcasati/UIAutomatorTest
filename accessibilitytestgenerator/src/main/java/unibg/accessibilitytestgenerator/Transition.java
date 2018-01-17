@@ -1,6 +1,9 @@
 package unibg.accessibilitytestgenerator;
 
-
+/**
+ * Describes the transition to a status to another.
+ * It contains the action to do and the node to act upon.
+ */
 public class Transition {
 
     private UIActions action;

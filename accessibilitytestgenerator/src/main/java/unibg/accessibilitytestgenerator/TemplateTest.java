@@ -28,11 +28,15 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
-@RunWith(AndroidJUnit4.class)
-@SdkSuppress(minSdkVersion = 18)
+/**
+ * Provides the method used to generate the template test file
+ */
 public class TemplateTest {
 
-
+    /**
+     * Generates the template test file, stored in UIAccessibilityTests in the external storage
+     * @throws IOException
+     */
     public static void createTemplate() throws IOException {
 
         String template = "import android.content.Context;\n" +

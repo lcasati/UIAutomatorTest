@@ -13,31 +13,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
+/**
+ * Contains the methods used to generate the test files
+ */
 public class TestCaseGenerator {
 
 
-    public static String uiautomatorName = "UIAccessibilityTests";
-
-    public static List<String> classesToTest(){
-        List<String> classes = new ArrayList<>();
-        classes.add("android.widget.TextView");
-        classes.add("android.widget.ImageView");
-        classes.add("android.widget.ImageButton");
-        classes.add("android.widget.Button");
-        classes.add("android.widget.CheckedTextView");
-        return classes;
-    }
+    private static String uiautomatorName = "UIAccessibilityTests";
 
 
+    /**
+     * Generates the java file containing the test cases for a certain component.
+     * It fills the template file with the information about the component that needs to be tested.
+     * @param appPackage package of the tested app
+     * @param node node that needs to be tested
+     * @param fileName name of the generated java file
+     * @param statusNumber number of the status of the node
+     * @throws IOException
+     */
     public static void generateTestCase(String appPackage, Node node, String fileName,int statusNumber) throws IOException {
 
-
-        Log.d("CASO DI TEST", appPackage + "\n" + "STATUS NUMERO" + Integer.toString(statusNumber) + "\n" + node.toString());
-
+        //get template test from the file in UIAccessibilityTests
         String template = getTemplate();
-
-        // TODO: NOME DEL TEST
 
         template = template.replaceAll("testcase_name", fileName);
 
@@ -96,8 +93,7 @@ public class TestCaseGenerator {
         template = template.replaceAll("conditionBounds", boundsCond);
 
 
-        // TODO: TRANSIZIONI PER ARRIVARE ALLO STATUS
-
+        //steps to get to the right status
         if(statusNumber==0){
 
             template = template.replaceAll("transitions_to_node", " ");
@@ -131,11 +127,6 @@ public class TestCaseGenerator {
         printTestCase(appPackage, template, fileName);
     }
 
-    /*
-    *
-    *
-    *
-    * */
 
 
     private static String getTemplate() {

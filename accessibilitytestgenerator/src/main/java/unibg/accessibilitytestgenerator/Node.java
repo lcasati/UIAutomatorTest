@@ -4,6 +4,10 @@ package unibg.accessibilitytestgenerator;
 import android.graphics.Rect;
 import android.support.test.uiautomator.UiObject2;
 
+/**
+ * Represents the node used by Android to identify graphic components in a window.
+ * It mirrors UIObject2 from UIAutomator
+ */
 public class Node {
 
     private String text;
