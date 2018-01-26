@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contains the methods used to generate the test files
@@ -115,6 +117,19 @@ public class TestCaseGenerator {
 
         template = template.replaceAll("conditionBounds", boundsCond);
 
+        StringBuilder stringmapBuilder = new StringBuilder();
+        Iterator it = ATG.stringMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            stringmapBuilder.append("put(\"" + pair.getKey() + "\",\"" + pair.getValue() +"\"); \n");
+        }
+
+        template = template.replaceAll("string_to_resource_map",
+                "    protected Map<String, String> stringMap = new HashMap<String, String>(){\n" +
+                        "        {\n" +
+                        "           " + stringmapBuilder.toString() +
+                        "        }\n" +
+                        "    };");
 
         if (statusNumber < 0) {
             template = template.replaceAll("transitions_to_node", " ");
@@ -122,28 +137,19 @@ public class TestCaseGenerator {
             //steps to get to the right status
             if (statusNumber == 0) {
 
-                template = template.replaceAll("transitions_to_node", " ");
+                template = template.replaceAll("transitions_to_node", "        populateEditText();\n");
             } else {
                 StringBuilder builder = new StringBuilder();
+                builder.append("        populateEditText();\n");
                 List<Transition> transitions = ListGraph.getPath(statusNumber);
                 for (Transition t : transitions) {
-
-                    //populate textview
-                    builder.append("        editTextViews = mDevice.findObjects(By.clazz(\"android.widget.EditText\"));\n" +
-                            "\n" +
-                            "        if (editTextViews.size() != 0) {\n" +
-                            "            for (UiObject2 obj : editTextViews) {\n" +
-                            "                obj.setText(\""+ ATG.TEST_STRING +"\");\n" +
-                            "            }\n" +
-                            "        }\n");
-
 
                     switch (t.getAction()) {
 
                         case CLICK:
                             builder.append("        mDevice.click(" + t.getNode().getBounds().centerX() + ", " + t.getNode().getBounds().centerY() + "); \n");
                             builder.append("        mDevice.waitForWindowUpdate(PACKAGE_NAME, " + 5000 + ");\n");
-
+                            builder.append("        populateEditText();\n");
 
                     }
                 }

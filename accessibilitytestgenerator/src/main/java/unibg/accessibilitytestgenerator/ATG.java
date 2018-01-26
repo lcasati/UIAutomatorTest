@@ -9,36 +9,30 @@ import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
 import android.support.test.uiautomator.Until;
-import android.util.Log;
 
-import org.junit.Test;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
  * Provides methods for the automated generation of accessibility tests
- *
  */
 public class ATG {
 
     private UiDevice mDevice;
     public static String TEST_STRING = "test";
-    private static  String PACKAGE_NAME;
+    private static String PACKAGE_NAME;
     private static final int LAUNCH_TIMEOUT = 5000;
-    private int i=0;
+    private int i = 0;
 
     //components that needs to be tested, for every component it will be generated a java file with the test cases
-    private List<String> classes = new ArrayList<String>(){
+    private List<String> classes = new ArrayList<String>() {
         {
             add("android.widget.TextView");
             add("android.widget.ImageView");
@@ -48,12 +42,14 @@ public class ATG {
         }
     };
 
+    protected static Map<String, String> stringMap = new HashMap<>();
+
     /**
-     *
      * @param packageName The name of the package of the app under test
      */
-    public ATG(String packageName){
+    public ATG(String packageName) {
         PACKAGE_NAME = packageName;
+        stringMap = new HashMap<>();
     }
 
 
@@ -61,8 +57,8 @@ public class ATG {
      * Generates a java file for every component of the app that should be tested.
      * The method explores the app and every time it finds something changed in the window, it generates tests for every component.
      */
-    public  void generateTestCases(){
-        try{
+    public void generateTestCases() {
+        try {
             //check if template file is already created, if not it creates it
             checkTemplate();
 
@@ -77,9 +73,8 @@ public class ATG {
             ListGraph.addVisitedStatus(status0);
             ListGraph.status0 = status0;
             crawl(status0);
-            i=0;
-        }
-        catch (IOException e) {
+            i = 0;
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -87,7 +82,7 @@ public class ATG {
 
     private void checkTemplate() throws IOException {
         File file = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/template");
-        if(!file.exists()){
+        if (!file.exists()) {
             TemplateTest.createTemplate();
         }
 
@@ -96,29 +91,37 @@ public class ATG {
 
     /**
      * Provide the class with a custom list of classes of the component that the user wants tested
+     *
      * @param classes The list of the classes
      */
-    public void setClassesToCheck(List<String> classes){
+    public void setClassesToCheck(List<String> classes) {
         this.classes = classes;
     }
 
     /**
      * Provide the string used to populate the EditText views when exploring the app
+     *
      * @param string
      */
-    public void setTestString(String string){
-        TEST_STRING=string;
+    public void setTestString(String string) {
+        TEST_STRING = string;
+    }
+
+
+    public void addStringToView(String idresource, String string) {
+
+        stringMap.put(PACKAGE_NAME + ":id/" + idresource, string);
     }
 
     /**
-     *
      * Generate test files for the components in the current window
+     *
      * @throws IOException
      */
     public void generateTestsForCurrentWindow() {
 
         // TODO: POPULATE EDITTEXT WITH TEXT ALREADY PRESENT
-        try{
+        try {
 
             checkTemplate();
             mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -127,19 +130,18 @@ public class ATG {
             for (Node node : status.getNodes()) {
 
                 if (classes.contains(node.getClassName())) {
-                    TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i,-1);
+                    TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i, -1);
                     i++;
                 }
 
             }
-            i=0;
-        }
-        catch (IOException e){
+            i = 0;
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void startMainActivityFromHomeScreen()  {
+    private void startMainActivityFromHomeScreen() {
 
 
         // Initialize UiDevice instance
@@ -246,7 +248,12 @@ public class ATG {
 
         if (editTextViews.size() != 0) {
             for (UiObject2 obj : editTextViews) {
-                obj.setText(TEST_STRING);
+                if (stringMap.containsKey(obj.getResourceName())) {
+                    obj.setText(stringMap.get(obj.getResourceName()));
+                } else {
+                    obj.setText(TEST_STRING);
+                }
+
             }
         }
     }
@@ -302,7 +309,6 @@ public class ATG {
 
 
     }
-
 
 
 }

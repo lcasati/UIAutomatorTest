@@ -29,6 +29,7 @@ public class ExampleTest {
    @Test
     public void test(){
         ATG atg = new ATG("unibg.caciuppo");
+        atg.addStringToView("editText", "Cassandra");
         atg.generateTestCases();
 
     }

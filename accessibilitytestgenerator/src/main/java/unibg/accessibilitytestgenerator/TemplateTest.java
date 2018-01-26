@@ -39,7 +39,9 @@ public class TemplateTest {
      */
     public static void createTemplate() throws IOException {
 
-        String template = "import android.content.Context;\n" +
+        String template = "package packageName;\n" +
+                "\n" +
+                "import android.content.Context;\n" +
                 "import android.content.Intent;\n" +
                 "import android.graphics.Rect;\n" +
                 "import android.os.Environment;\n" +
@@ -59,6 +61,8 @@ public class TemplateTest {
                 "\n" +
                 "import java.io.File;\n" +
                 "import java.util.List;\n" +
+                "import java.util.HashMap;\n"+
+                "import java.util.Map;\n"+
                 "\n" +
                 "import static junit.framework.Assert.assertFalse;\n" +
                 "import static junit.framework.Assert.assertTrue;\n" +
@@ -74,6 +78,7 @@ public class TemplateTest {
                 "    private static final int LAUNCH_TIMEOUT = 5000;\n" +
                 "    private UiDevice mDevice;\n" +
                 "    private UiObject2 targetView = null;\n" +
+                "string_to_resource_map"+
                 "\n" +
                 "\n" +
                 "    @Before\n" +
@@ -86,7 +91,7 @@ public class TemplateTest {
                 "start_application" +
                 "\n" +
                 "\n" +
-                "        transitions_to_node\n" +
+                "transitions_to_node\n" +
                 "\n" +
                 "\n" +
                 "        File dir = new File(Environment.getExternalStorageDirectory() + \"/UIAccessibilityTests/\");\n" +
@@ -147,6 +152,20 @@ public class TemplateTest {
                 "\t\tassertFalse(contrastRatio < 3);\n" +
                 "    }\n" +
                 "\n" +
+                "    private void populateEditText() {\n" +
+                "        List<UiObject2> editTextViews = mDevice.findObjects(By.clazz(\"android.widget.EditText\"));\n" +
+                "\n" +
+                "        if (editTextViews.size() != 0) {\n" +
+                "            for (UiObject2 obj : editTextViews) {\n" +
+                "                if (stringMap.containsKey(obj.getResourceName())) {\n" +
+                "                    obj.setText(stringMap.get(obj.getResourceName()));\n" +
+                "                } else {\n" +
+                "                    obj.setText(\"" +ATG.TEST_STRING + "\");\n" +
+                "                }\n" +
+                "\n" +
+                "            }\n" +
+                "        }\n" +
+                "    }"+
                 "\n" +
                 "}\n";
 
