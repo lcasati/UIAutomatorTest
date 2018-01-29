@@ -133,10 +133,10 @@ public class TemplateTest {
                 "\n" +
                 "        if(targetView.isClickable() || targetView.isCheckable()){\n" +
                 "            DisplayMetrics metrics = InstrumentationRegistry.getContext().getResources().getDisplayMetrics();\n" +
-                "            int displayDpi = metrics.densityDpi;\n" +
+                "            float dpiRatio = (float) metrics.densityDpi / 160;\n" +
                 "            Rect viewModel = targetView.getVisibleBounds();\n" +
-                "            int heightDP= (int) (Math.abs(viewModel.height())/displayDpi);\n" +
-                "            int widthDP= (int) (Math.abs(viewModel.width())/displayDpi);\n" +
+                "            int heightDP= (int) (Math.abs(viewModel.height())/dpiRatio);\n" +
+                "            int widthDP= (int) (Math.abs(viewModel.width())/dpiRatio);\n" +
                 "            assertFalse(heightDP<48 || widthDP<48);\n" +
                 "        }\n" +
                 "       \n" +
