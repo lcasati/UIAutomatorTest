@@ -36,12 +36,16 @@ public class TestCaseGenerator {
         //get template test from the file in UIAccessibilityTests
         String template = getTemplate();
 
+        //FILE NAME
         template = template.replaceAll("testcase_name", fileName);
 
+        //PACKAGE NAME
         template = template.replaceAll("package_name", appPackage);
 
+        //CLASS NAME
         template = template.replaceAll("class_name", node.getClassName());
 
+        //LOAD APP
         if (statusNumber < 0) {
             template = template.replaceAll("start_application", "");
         } else {
@@ -68,6 +72,7 @@ public class TestCaseGenerator {
         }
 
 
+        //OBJECT SEARCH CONDITIONS
         String textCond;
 
         if (node.getText() == null)
@@ -117,19 +122,26 @@ public class TestCaseGenerator {
 
         template = template.replaceAll("conditionBounds", boundsCond);
 
-        StringBuilder stringmapBuilder = new StringBuilder();
-        Iterator it = ATG.stringMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            stringmapBuilder.append("put(\"" + pair.getKey() + "\",\"" + pair.getValue() +"\"); \n");
+        //USER STRING MAP
+        if(statusNumber<0){
+            template = template.replaceAll("string_to_resource_map","\n");
+        }
+        else{
+            StringBuilder stringmapBuilder = new StringBuilder();
+            Iterator it = ATG.stringMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry)it.next();
+                stringmapBuilder.append("put(\"" + pair.getKey() + "\",\"" + pair.getValue() +"\"); \n");
+            }
+
+            template = template.replaceAll("string_to_resource_map",
+                    "    protected Map<String, String> stringMap = new HashMap<String, String>(){\n" +
+                            "        {\n" +
+                            "           " + stringmapBuilder.toString() +
+                            "        }\n" +
+                            "    };");
         }
 
-        template = template.replaceAll("string_to_resource_map",
-                "    protected Map<String, String> stringMap = new HashMap<String, String>(){\n" +
-                        "        {\n" +
-                        "           " + stringmapBuilder.toString() +
-                        "        }\n" +
-                        "    };");
 
         if (statusNumber < 0) {
             template = template.replaceAll("transitions_to_node", " ");
@@ -156,6 +168,28 @@ public class TestCaseGenerator {
                 template = template.replaceAll("transitions_to_node", builder.toString());
             }
         }
+
+        if(statusNumber<0){
+            template = template.replaceAll("populate_edittext", "\n");
+        }
+        else{
+            template = template.replaceAll("populate_edittext",
+                    "    private void populateEditText() {\n" +
+                    "        List<UiObject2> editTextViews = mDevice.findObjects(By.clazz(\"android.widget.EditText\"));\n" +
+                    "\n" +
+                    "        if (editTextViews.size() != 0) {\n" +
+                    "            for (UiObject2 obj : editTextViews) {\n" +
+                    "                if (stringMap.containsKey(obj.getResourceName())) {\n" +
+                    "                    obj.setText(stringMap.get(obj.getResourceName()));\n" +
+                    "                } else {\n" +
+                    "                    obj.setText(\"" +ATG.TEST_STRING + "\");\n" +
+                    "                }\n" +
+                    "\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "    }");
+        }
+
         printTestCase(appPackage, template, fileName);
     }
 

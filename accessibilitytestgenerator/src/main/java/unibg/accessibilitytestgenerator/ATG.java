@@ -120,7 +120,7 @@ public class ATG {
      */
     public void generateTestsForCurrentWindow() {
 
-        // TODO: POPULATE EDITTEXT WITH TEXT ALREADY PRESENT
+
         try {
 
             checkTemplate();

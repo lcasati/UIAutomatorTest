@@ -84,7 +84,6 @@ public class TemplateTest {
                 "    @Before\n" +
                 "    public void startMainActivityFromHomeScreen() {\n" +
                 "\n" +
-                "         List<UiObject2> editTextViews;\n"+
                 "        // Initialize UiDevice instance\n" +
                 "        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());\n" +
                 "\n" +
@@ -152,20 +151,7 @@ public class TemplateTest {
                 "\t\tassertFalse(contrastRatio < 3);\n" +
                 "    }\n" +
                 "\n" +
-                "    private void populateEditText() {\n" +
-                "        List<UiObject2> editTextViews = mDevice.findObjects(By.clazz(\"android.widget.EditText\"));\n" +
-                "\n" +
-                "        if (editTextViews.size() != 0) {\n" +
-                "            for (UiObject2 obj : editTextViews) {\n" +
-                "                if (stringMap.containsKey(obj.getResourceName())) {\n" +
-                "                    obj.setText(stringMap.get(obj.getResourceName()));\n" +
-                "                } else {\n" +
-                "                    obj.setText(\"" +ATG.TEST_STRING + "\");\n" +
-                "                }\n" +
-                "\n" +
-                "            }\n" +
-                "        }\n" +
-                "    }"+
+                "populate_edittext \n" +
                 "\n" +
                 "}\n";
 
