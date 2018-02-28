@@ -27,8 +27,8 @@ public class ATG {
 
     private UiDevice mDevice;
     public static String TEST_STRING = "test";
-    private static String PACKAGE_NAME;
-    private static final int LAUNCH_TIMEOUT = 5000;
+    private String PACKAGE_NAME;
+    private final int LAUNCH_TIMEOUT = 5000;
     private int i = 0;
 
     //components that needs to be tested, for every component it will be generated a java file with the test cases

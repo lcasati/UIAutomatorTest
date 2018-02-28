@@ -73,9 +73,9 @@ public class TemplateTest {
                 "@SdkSuppress(minSdkVersion = 18)\n" +
                 "public class testcase_name {\n" +
                 "\n" +
-                "    private static final String PACKAGE_NAME\n" +
+                "    private final String PACKAGE_NAME\n" +
                 "            = \"package_name\";\n" +
-                "    private static final int LAUNCH_TIMEOUT = 5000;\n" +
+                "    private final int LAUNCH_TIMEOUT = 5000;\n" +
                 "    private UiDevice mDevice;\n" +
                 "    private UiObject2 targetView = null;\n" +
                 "string_to_resource_map"+

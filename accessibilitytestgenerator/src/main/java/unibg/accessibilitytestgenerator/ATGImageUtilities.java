@@ -252,7 +252,6 @@ public class ATGImageUtilities {
         //return the contrast ratio
         return (mean2 + 0.05)/(mean1 + 0.05);
 
-
     }
 
 
