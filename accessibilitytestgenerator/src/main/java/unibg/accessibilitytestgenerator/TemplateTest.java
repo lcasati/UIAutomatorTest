@@ -34,7 +34,7 @@ import static org.junit.Assert.assertThat;
 public class TemplateTest {
 
     /**
-     * Generates the template test file, stored in UIAccessibilityTests in the external storage
+     * Generates the template test file, stored in ATG in the external storage
      * @throws IOException
      */
     public static void createTemplate() throws IOException {
@@ -93,7 +93,7 @@ public class TemplateTest {
                 "transitions_to_node\n" +
                 "\n" +
                 "\n" +
-                "        File dir = new File(Environment.getExternalStorageDirectory() + \"/UIAccessibilityTests/\");\n" +
+                "        File dir = new File(Environment.getExternalStorageDirectory() + \"/ATG/\");\n" +
                 "        dir.mkdirs();\n" +
                 "        File file = new File(dir, \"screenshot.png\");\n" +
                 "        mDevice.takeScreenshot(file);\n" +
@@ -123,7 +123,7 @@ public class TemplateTest {
                 "\n" +
                 "        String contentDesc = targetView.getContentDescription();\n" +
                 "        String text = targetView.getText();\n" +
-                "        assertTrue((contentDesc!= null && contentDesc.equals(\"\")) || (text!=null && !text.equals(\"\")));\n" +
+                "        assertTrue((contentDesc!= null && !contentDesc.equals(\"\")) || (text!=null && !text.equals(\"\")));\n" +
                 "\n" +
                 "    }\n" +
                 "\n" +
@@ -145,8 +145,8 @@ public class TemplateTest {
                 "    @Test\n" +
                 "    public void testContrast() {\n" +
                 "\n" +
-                "        double contrastRatio = ATGImageUtilities.contrastRatioOtsu(Environment.getExternalStorageDirectory() + \"/UIAccessibilityTests/screenshot.png\", targetView.getVisibleBounds());\n" +
-                "        File file = new File(Environment.getExternalStorageDirectory() + \"/UIAccessibilityTests/screenshot.png\");\n" +
+                "        double contrastRatio = ATGImageUtilities.contrastRatioOtsu(Environment.getExternalStorageDirectory() + \"/ATG/screenshot.png\", targetView.getVisibleBounds());\n" +
+                "        File file = new File(Environment.getExternalStorageDirectory() + \"/ATG/screenshot.png\");\n" +
                 "        file.delete();\n" +
                 "\t\tassertFalse(contrastRatio < 3);\n" +
                 "    }\n" +
@@ -155,7 +155,7 @@ public class TemplateTest {
                 "\n" +
                 "}\n";
 
-        File file = new File(Environment.getExternalStorageDirectory()  + "/UIAccessibilityTests/");
+        File file = new File(Environment.getExternalStorageDirectory()  + "/" + TestCaseGenerator.uiautomatorName + "/");
         file.mkdirs();
 
         File output = new File(file, "template");

@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class ATGImageUtilities {
 
 
-    private static int numOfLevels=101;
+    private static int numOfLevels=1001;
 
     private static float getLuminance(int color) {
 
@@ -45,109 +45,7 @@ public class ATGImageUtilities {
         return (float) ((0.2126 * red) + (0.7152 * green) + (0.0722 * blue));
     }
 
-    public static double contrastRatio(String filename, Rect bounds) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeFile(filename, options);
 
-
-        int left = bounds.left + 10;
-        int top = bounds.top + 15;
-        int right = bounds.right - 10;
-        int bottom = bounds.bottom - 15;
-
-
-        Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, left, top, right - left, bottom - top);
-
-        Bitmap topBackground;
-        int topbackgroundSize;
-
-        if (top == bounds.top) {
-            topBackground = null;
-            topbackgroundSize = 0;
-        } else {
-
-            topBackground = Bitmap.createBitmap(bitmap, left, bounds.top, right - left, 15);
-            topbackgroundSize = topBackground.getWidth() * topBackground.getHeight();
-        }
-
-
-        Bitmap leftBackground;
-        int leftbackgroundSize;
-
-        if (left == bounds.left) {
-            leftBackground = null;
-            leftbackgroundSize = 0;
-        } else {
-            leftBackground = Bitmap.createBitmap(bitmap, bounds.left, top, 10 , bottom - top);
-            leftbackgroundSize = leftBackground.getWidth() * leftBackground.getHeight();
-        }
-
-
-        Bitmap rightBackground;
-        int rightbackgroundSize;
-
-        if (right == bounds.right) {
-            rightBackground = null;
-            rightbackgroundSize = 0;
-        } else {
-            rightBackground = Bitmap.createBitmap(bitmap, right, top, 10, bottom-top);
-            rightbackgroundSize = rightBackground.getWidth() * rightBackground.getHeight();
-        }
-
-
-        Bitmap bottomBackground;
-        int bottombackgroundSize;
-
-        if (bottom == bounds.bottom) {
-            bottomBackground = null;
-            bottombackgroundSize = 0;
-        } else {
-            bottomBackground = Bitmap.createBitmap(bitmap, left, bottom, right - left, 15);
-            bottombackgroundSize = bottomBackground.getWidth() * bottomBackground.getHeight();
-        }
-
-        int[] pixels = new int[croppedBitmap.getHeight() * croppedBitmap.getWidth()];
-        croppedBitmap.getPixels(pixels, 0, croppedBitmap.getWidth(), 0, 0, croppedBitmap.getWidth(), croppedBitmap.getHeight());
-
-        float foregroundMeanPixel = getMeanLuminance(croppedBitmap);
-
-
-        float topbackgroundColor = getMeanLuminance(topBackground);
-
-
-        float leftbackgroundColor = getMeanLuminance(leftBackground);
-
-
-        float rightbackgroundColor = getMeanLuminance(rightBackground);
-
-
-        float bottombackgroundColor = getMeanLuminance(bottomBackground);
-
-
-        int backgroundSize = topbackgroundSize + leftbackgroundSize + rightbackgroundSize + bottombackgroundSize;
-
-        float backgroundMeanPixel = ((topbackgroundColor * topbackgroundSize) + (leftbackgroundColor * leftbackgroundSize) + (rightbackgroundColor * rightbackgroundSize) + (bottombackgroundColor * bottombackgroundSize)) / backgroundSize;
-
-        if (backgroundMeanPixel > foregroundMeanPixel) {
-            return (backgroundMeanPixel + 0.05) / (foregroundMeanPixel + 0.05);
-        } else {
-            return (foregroundMeanPixel + 0.05) / (backgroundMeanPixel + 0.05);
-        }
-    }
-
-    private static float getMeanLuminance(Bitmap image) {
-        float sum = 0;
-        int[] pixels = new int[image.getHeight() * image.getWidth()];
-        image.getPixels(pixels, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
-        for (int i = 0; i < pixels.length; i++) {
-            float luminance = getLuminance(pixels[i]);
-            sum = sum + luminance;
-
-        }
-        return sum / pixels.length;
-
-    }
 
     /**
      * Returns the contrast ratio, using the Otsu threshold to establish what's in the background and what's in the foreground
@@ -177,7 +75,7 @@ public class ATGImageUtilities {
         int[] histogram = new int[numOfLevels];
         // Compute the histogram of the grayscale input
         for (int i = 0; i < image.length; i++) {
-            histogram[(int)(getLuminance(image[i])*100)]++; // [ni]
+            histogram[(int)(getLuminance(image[i])*1000)]++; // [ni]
         }
 
 
@@ -237,11 +135,11 @@ public class ATGImageUtilities {
 
         for(int i=0; i<histogram.length;i++){
             if(i<=thresholdValue){
-                sum1+= ((double)i/100) * histogram[i];
+                sum1+= ((double)i/1000) * histogram[i];
                 total1+=histogram[i];
             }
             else{
-                sum2+= ((double)i/100) * histogram[i];
+                sum2+= ((double)i/1000) * histogram[i];
                 total2+=histogram[i];
             }
         }

@@ -17,7 +17,7 @@ import java.util.Map;
 public class TestCaseGenerator {
 
 
-    private static String uiautomatorName = "UIAccessibilityTests";
+    public static String uiautomatorName = "ATG";
 
 
     /**
@@ -33,7 +33,7 @@ public class TestCaseGenerator {
      */
     public static void generateTestCase(String appPackage, Node node, String fileName, int statusNumber) throws IOException {
 
-        //get template test from the file in UIAccessibilityTests
+        //get template test from the file in ATG
         String template = getTemplate();
 
         //FILE NAME

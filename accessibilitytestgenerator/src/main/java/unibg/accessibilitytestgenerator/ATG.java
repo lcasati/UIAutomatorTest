@@ -29,7 +29,7 @@ public class ATG {
     public static String TEST_STRING = "test";
     private String PACKAGE_NAME;
     private final int LAUNCH_TIMEOUT = 5000;
-    private int i = 0;
+    private int testNumber = 0;
 
     //components that needs to be tested, for every component it will be generated a java file with the test cases
     private List<String> classes = new ArrayList<String>() {
@@ -73,7 +73,7 @@ public class ATG {
             ListGraph.addVisitedStatus(status0);
             ListGraph.status0 = status0;
             crawl(status0);
-            i = 0;
+            testNumber = 0;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +81,7 @@ public class ATG {
     }
 
     private void checkTemplate() throws IOException {
-        File file = new File(Environment.getExternalStorageDirectory() + "/UIAccessibilityTests/template");
+        File file = new File(Environment.getExternalStorageDirectory() + "/"+ TestCaseGenerator.uiautomatorName +"/template");
         if (!file.exists()) {
             TemplateTest.createTemplate();
         }
@@ -99,6 +99,20 @@ public class ATG {
     }
 
     /**
+     * Add class to the list of classes to test
+     *
+     * @param className name of the class
+     */
+    public void addClassToCheck(String className){classes.add(className);}
+
+    /**
+     * Remove class from the list of classes to test
+     *
+     * @param className name of the class
+     */
+    public void removeClassToCheck(String className){classes.remove(className);}
+
+    /**
      * Provide the string used to populate the EditText views when exploring the app
      *
      * @param string
@@ -107,7 +121,12 @@ public class ATG {
         TEST_STRING = string;
     }
 
-
+    /**
+     * Add string you want to be used in a certain view during testing
+     *
+     * @param idresource id of the view
+     * @param string string used
+     */
     public void addStringToView(String idresource, String string) {
 
         stringMap.put(PACKAGE_NAME + ":id/" + idresource, string);
@@ -130,12 +149,12 @@ public class ATG {
             for (Node node : status.getNodes()) {
 
                 if (classes.contains(node.getClassName())) {
-                    TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i, -1);
-                    i++;
+                    TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + testNumber, -1);
+                    testNumber++;
                 }
 
             }
-            i = 0;
+            testNumber = 0;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,8 +206,8 @@ public class ATG {
         for (Node node : status.getNodes()) {
 
             if (classes.contains(node.getClassName())) {
-                TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + i, status.getNumber());
-                i++;
+                TestCaseGenerator.generateTestCase(PACKAGE_NAME, node, "Test" + testNumber, status.getNumber());
+                testNumber++;
             }
 
             //add transaction to a possible new status
