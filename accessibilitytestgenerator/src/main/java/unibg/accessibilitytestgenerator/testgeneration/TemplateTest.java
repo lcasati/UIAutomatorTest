@@ -1,27 +1,10 @@
-package unibg.accessibilitytestgenerator;
+package unibg.accessibilitytestgenerator.testgeneration;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Environment;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.SdkSuppress;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.By;
-import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObject2;
-import android.support.test.uiautomator.Until;
-import android.util.DisplayMetrics;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -37,7 +20,7 @@ public class TemplateTest {
      * Generates the template test file, stored in ATG in the external storage
      * @throws IOException
      */
-    public static void createTemplate() throws IOException {
+     static void createTemplate() throws IOException {
 
         String template = "package packageName;\n" +
                 "\n" +
@@ -53,7 +36,7 @@ public class TemplateTest {
                 "import android.support.test.uiautomator.UiObject2;\n" +
                 "import android.support.test.uiautomator.Until;\n" +
                 "import android.util.DisplayMetrics;\n" +
-                "import unibg.accessibilitytestgenerator.ATGImageUtilities;\n" +
+                "import unibg.accessibilitytestgenerator.imageprocessing.ATGImageUtilities;\n" +
                 "\n" +
                 "import org.junit.Before;\n" +
                 "import org.junit.Test;\n" +

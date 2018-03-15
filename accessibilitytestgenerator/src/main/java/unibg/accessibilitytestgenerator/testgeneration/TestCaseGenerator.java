@@ -1,4 +1,4 @@
-package unibg.accessibilitytestgenerator;
+package unibg.accessibilitytestgenerator.testgeneration;
 
 import android.os.Environment;
 
@@ -11,13 +11,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import unibg.accessibilitytestgenerator.graph.ListGraph;
+import unibg.accessibilitytestgenerator.graph.Node;
+import unibg.accessibilitytestgenerator.graph.Transition;
+
 /**
  * Contains the methods used to generate the test files
  */
-public class TestCaseGenerator {
+ class TestCaseGenerator {
 
 
-    public static String uiautomatorName = "ATG";
+     static String uiautomatorName = "ATG";
 
 
     /**
@@ -31,7 +35,7 @@ public class TestCaseGenerator {
      * @param statusNumber number of the status of the node
      * @throws IOException
      */
-    public static void generateTestCase(String appPackage, Node node, String fileName, int statusNumber) throws IOException {
+     static void generateTestCase(String appPackage, Node node, String fileName, int statusNumber) throws IOException {
 
         //get template test from the file in ATG
         String template = getTemplate();

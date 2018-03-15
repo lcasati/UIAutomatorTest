@@ -1,4 +1,4 @@
-package unibg.accessibilitytestgenerator;
+package unibg.accessibilitytestgenerator.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;

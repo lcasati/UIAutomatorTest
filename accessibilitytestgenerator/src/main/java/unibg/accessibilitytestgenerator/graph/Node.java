@@ -1,4 +1,4 @@
-package unibg.accessibilitytestgenerator;
+package unibg.accessibilitytestgenerator.graph;
 
 
 import android.graphics.Rect;

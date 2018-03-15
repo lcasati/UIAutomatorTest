@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import unibg.accessibilitytestgenerator.ATG;
+import unibg.accessibilitytestgenerator.testgeneration.ATG;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)

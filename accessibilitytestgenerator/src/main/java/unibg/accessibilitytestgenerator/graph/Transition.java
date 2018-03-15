@@ -1,4 +1,4 @@
-package unibg.accessibilitytestgenerator;
+package unibg.accessibilitytestgenerator.graph;
 
 /**
  * Describes the transition to a status to another.

@@ -1,4 +1,4 @@
-package unibg.accessibilitytestgenerator;
+package unibg.accessibilitytestgenerator.testgeneration;
 
 
 import android.content.Context;
@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import unibg.accessibilitytestgenerator.graph.ListGraph;
+import unibg.accessibilitytestgenerator.graph.Node;
+import unibg.accessibilitytestgenerator.graph.Transition;
+import unibg.accessibilitytestgenerator.graph.UIActions;
+import unibg.accessibilitytestgenerator.graph.WindowStatus;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;

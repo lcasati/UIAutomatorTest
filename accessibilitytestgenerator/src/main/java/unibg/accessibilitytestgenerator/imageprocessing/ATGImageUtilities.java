@@ -1,4 +1,4 @@
-package unibg.accessibilitytestgenerator;
+package unibg.accessibilitytestgenerator.imageprocessing;
 
 
 import android.graphics.Bitmap;
