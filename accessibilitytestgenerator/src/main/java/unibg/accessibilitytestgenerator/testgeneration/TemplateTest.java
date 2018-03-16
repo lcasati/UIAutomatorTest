@@ -101,38 +101,11 @@ public class TemplateTest {
                 "\n" +
                 "    }\n" +
                 "\n" +
-                "    @Test\n" +
-                "    public void testContentDesc() {\n" +
+                "contentDesc_test" +
                 "\n" +
-                "        String contentDesc = targetView.getContentDescription();\n" +
-                "        String text = targetView.getText();\n" +
-                "        assertTrue((contentDesc!= null && !contentDesc.equals(\"\")) || (text!=null && !text.equals(\"\")));\n" +
+                "size_test" +
                 "\n" +
-                "    }\n" +
-                "\n" +
-                "    @Test\n" +
-                "    public void testSize() {\n" +
-                "\n" +
-                "        if(targetView.isClickable() || targetView.isCheckable()){\n" +
-                "            DisplayMetrics metrics = InstrumentationRegistry.getContext().getResources().getDisplayMetrics();\n" +
-                "            float dpiRatio = (float) metrics.densityDpi / 160;\n" +
-                "            Rect viewModel = targetView.getVisibleBounds();\n" +
-                "            int heightDP= (int) (Math.abs(viewModel.height())/dpiRatio);\n" +
-                "            int widthDP= (int) (Math.abs(viewModel.width())/dpiRatio);\n" +
-                "            assertFalse(heightDP<48 || widthDP<48);\n" +
-                "        }\n" +
-                "       \n" +
-                "    }"+
-                "\n" +
-                "\n" +
-                "    @Test\n" +
-                "    public void testContrast() {\n" +
-                "\n" +
-                "        double contrastRatio = ATGImageUtilities.contrastRatioOtsu(Environment.getExternalStorageDirectory() + \"/ATG/screenshot.png\", targetView.getVisibleBounds());\n" +
-                "        File file = new File(Environment.getExternalStorageDirectory() + \"/ATG/screenshot.png\");\n" +
-                "        file.delete();\n" +
-                "\t\tassertFalse(contrastRatio < 3);\n" +
-                "    }\n" +
+                "contrast_test" +
                 "\n" +
                 "populate_edittext \n" +
                 "\n" +

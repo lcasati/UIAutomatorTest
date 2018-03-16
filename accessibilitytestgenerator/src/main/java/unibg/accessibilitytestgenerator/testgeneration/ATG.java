@@ -32,10 +32,16 @@ import static org.junit.Assert.assertThat;
 public class ATG {
 
     private UiDevice mDevice;
-    public static String TEST_STRING = "test";
+    protected static String TEST_STRING = "test";
     private String PACKAGE_NAME;
     private final int LAUNCH_TIMEOUT = 5000;
     private int testNumber = 0;
+    protected static boolean contrastTest = true;
+    protected static boolean sizeTest = true;
+    protected static boolean contentDescTest = true;
+    protected static int size =48;
+    protected static int contrastRatio=3;
+
 
     //components that needs to be tested, for every component it will be generated a java file with the test cases
     private List<String> classes = new ArrayList<String>() {
@@ -164,6 +170,52 @@ public class ATG {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Set the value of contrastTest
+     * true - generate contrast tests
+     * false - not generate contrast tests
+     * @param contrastTest
+     */
+    public static void setContrastTest(boolean contrastTest) {
+        ATG.contrastTest = contrastTest;
+    }
+
+    /**
+     * Set the value of contentDescTest
+     * true - generate content description tests
+     * false - not generate contente description tests
+     * @param contentDescTest
+     */
+    public static void setContentDescTest(boolean contentDescTest) {
+        ATG.contentDescTest = contentDescTest;
+    }
+
+    /**
+     * Set the value of sizeTest
+     * true - generate size tests
+     * false - not generate size tests
+     * @param sizeTest
+     */
+    public static void setSizeTest(boolean sizeTest) {
+        ATG.sizeTest = sizeTest;
+    }
+
+    /**
+     * Setting the size in dp used in the test, default is 48dp
+     * @param size
+     */
+    public static void setSize(int size) {
+        ATG.size = size;
+    }
+
+    /**
+     * Setting the minimum contrast ratio used in the test, dafault is 3
+     * @param contrastRatio
+     */
+    public static void setContrastRatio(int contrastRatio) {
+        ATG.contrastRatio = contrastRatio;
     }
 
     private void startMainActivityFromHomeScreen() {

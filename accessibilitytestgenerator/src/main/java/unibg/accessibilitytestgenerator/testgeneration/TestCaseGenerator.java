@@ -194,6 +194,59 @@ import unibg.accessibilitytestgenerator.graph.Transition;
                     "    }");
         }
 
+        if(ATG.contentDescTest){
+            template = template.replaceAll("contentDesc_test",  "\n" +
+                    "    @Test\n" +
+                    "    public void testContentDesc() {\n" +
+                    "\n" +
+                    "        String contentDesc = targetView.getContentDescription();\n" +
+                    "        String text = targetView.getText();\n" +
+                    "        assertTrue((contentDesc!= null && !contentDesc.equals(\"\")) || (text!=null && !text.equals(\"\")));\n" +
+                    "\n" +
+                    "    }\n" +
+                    "\n" );
+        }
+        else{
+            template = template.replaceAll("contentDesc_test", " ");
+        }
+
+         if(ATG.contrastTest){
+             template = template.replaceAll("contrast_test","\n" +
+                     "    @Test\n" +
+                     "    public void testContrast() {\n" +
+                     "\n" +
+                     "        double contrastRatio = ATGImageUtilities.contrastRatioOtsu(Environment.getExternalStorageDirectory() + \"/ATG/screenshot.png\", targetView.getVisibleBounds());\n" +
+                     "        File file = new File(Environment.getExternalStorageDirectory() + \"/ATG/screenshot.png\");\n" +
+                     "        file.delete();\n" +
+                     "\t\tassertFalse(contrastRatio < "+ ATG.contrastRatio + ");\n" +
+                     "    }\n" +
+                     "\n" );
+         }
+         else{
+             template = template.replaceAll("contrast_test", " ");
+         }
+
+         if(ATG.sizeTest){
+             template = template.replaceAll("size_test", "\n" +
+                     "    @Test\n" +
+                     "    public void testSize() {\n" +
+                     "\n" +
+                     "        if(targetView.isClickable() || targetView.isCheckable()){\n" +
+                     "            DisplayMetrics metrics = InstrumentationRegistry.getContext().getResources().getDisplayMetrics();\n" +
+                     "            float dpiRatio = (float) metrics.densityDpi / 160;\n" +
+                     "            Rect viewModel = targetView.getVisibleBounds();\n" +
+                     "            int heightDP= (int) (Math.abs(viewModel.height())/dpiRatio);\n" +
+                     "            int widthDP= (int) (Math.abs(viewModel.width())/dpiRatio);\n" +
+                     "            assertFalse(heightDP<"+ ATG.size + " || widthDP<" + ATG.size + ");\n" +
+                     "        }\n" +
+                     "       \n" +
+                     "    }"+
+                     "\n" );
+         }
+         else{
+             template = template.replaceAll("size_test", " ");
+         }
+
         printTestCase(appPackage, template, fileName);
     }
 
